@@ -1,7 +1,6 @@
 from fastapi import FastAPI
+from .moon.router import router as moon_router
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+app.include_router(moon_router, prefix="/moon")

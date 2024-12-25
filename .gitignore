@@ -1,2 +1,7 @@
 venv/
 .idea
+backend/services/de440.bsp
+backend/media
+backend/tests/.pytest_cache
+backend/tests/unit/.pytest_cache
+backend/tests/load/.pytest_cache
