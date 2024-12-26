@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter
 
-from backend.services.moon.services import get_moon_phases
+from services.moon.services import get_moon_phases
 
 router = APIRouter()
 

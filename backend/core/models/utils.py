@@ -1,7 +1,13 @@
 from enum import Enum
 
 
-class Planets(int, Enum):
+class LanguagesChoices(int, Enum):
+    english = 1
+    russian = 2
+    polish = 3
+
+
+class PlanetsChoices(int, Enum):
     mercury = 1
     venus = 2
     earth = 3
@@ -14,7 +20,7 @@ class Planets(int, Enum):
     sun = 10
 
 
-class Zodiacs(int, Enum):
+class ZodiacsChoices(int, Enum):
     oven = 1
     taurus = 2
     gemini = 3
@@ -29,7 +35,7 @@ class Zodiacs(int, Enum):
     pisces = 12
 
 
-class Houses(int, Enum):
+class HousesChoices(int, Enum):
     first = 1
     second = 2
     third = 3
@@ -42,3 +48,12 @@ class Houses(int, Enum):
     tenth = 10
     eleventh = 11
     twelfth = 12
+
+
+class MoonEventsChoices(int, Enum):
+    blue_moon = 1
+    micromoon = 2
+    supermoon = 3
+
+
+__all__ = ["LanguagesChoices", "PlanetsChoices", "ZodiacsChoices", "HousesChoices", "MoonEventsChoices"]

@@ -5,3 +5,4 @@ backend/media
 backend/tests/.pytest_cache
 backend/tests/unit/.pytest_cache
 backend/tests/load/.pytest_cache
+backend/db.sqlite3

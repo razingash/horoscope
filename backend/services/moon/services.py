@@ -5,15 +5,14 @@ import pytz
 
 from datetime import datetime
 from skyfield.api import load
-
 from skyfield.almanac import find_discrete, moon_phases
 
-from backend.core.config import MEDIA_DIR
-from backend.moon.constants import eph
+from core.config import MEDIA_DIR
+from moon.constants import eph
 
 
 def get_moon_phases(date): # CHANGE
-    folder_path = os.path.join(MEDIA_DIR, f"moon/{date.year}") # надо будет изменить date.year
+    folder_path = os.path.join(MEDIA_DIR, f"moon/{date.year}")
     file_path = os.path.join(folder_path, f"{date.month}.json")
 
     if not os.path.exists(folder_path):
