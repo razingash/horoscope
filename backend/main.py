@@ -3,17 +3,14 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-from core.database import create_database, delete_database
 from moon.router import router as moon_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await create_database()
-    print("База готова")
+    print("START")
     yield
-    await delete_database()
-    print('очистка')
+    print('END')
 
 
 app = FastAPI(lifespan=lifespan)

@@ -5,9 +5,7 @@ from core.models.base import Base
 from core.models.utils import LanguagesChoices, MoonEventsChoices
 
 
-class MoonEventsSchedule(Base):
-    """in UTC"""
-
+class MoonEventsSchedule(Base): # in UTC
     date: Mapped[str] = mapped_column(Date, unique=True, index=True)
     path: Mapped[str] = mapped_column(String(150), nullable=False)
 

@@ -9,14 +9,22 @@ from skyfield.almanac import find_discrete, moon_phases
 
 from core.config import MEDIA_DIR
 from moon.constants import eph
+from moon.crud import get_moon_schedule_path, add_moon_schedule
 
 
-def get_moon_phases(date): # CHANGE
-    folder_path = os.path.join(MEDIA_DIR, f"moon/{date.year}")
-    file_path = os.path.join(folder_path, f"{date.month}.json")
+async def get_moon_phases(session, date): # CHANGE ?
+    """а так ли надо хранить эти данные в базе данных, учитывая что основные данные хранятся, в json, а поля модели
+        служат только для навигации по этим данным"""
+    file_path = await get_moon_schedule_path(session=session, date=date) # DB
 
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
+    if file_path is None:
+        folder_path = os.path.join(MEDIA_DIR, f"moon/{date.year}")
+        file_path = os.path.join(folder_path, f"{date.month}.json")
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        await add_moon_schedule(session, event_date=date, path=file_path)
 
     if not os.path.exists(file_path): # create json file with monthly data
         phases = moon_phases(eph)
