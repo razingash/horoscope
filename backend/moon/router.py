@@ -1,5 +1,3 @@
-from datetime import date
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,7 +8,7 @@ router = APIRouter()
 
 @router.get(path="/lunar-forecast/{year}/{month}") # for current location (permalink)
 async def get_moon_info_by_timezone(year: int, month: int, session: AsyncSession = Depends(db_session.session_dependency)):
-    phases = await get_moon_phases(session=session, date=date(year, month, 1))
+    phases = await get_moon_phases(session=session, year=year, month=month)
     return {'moon phases': phases}
 
 @router.get(path="/lunar-forecast")

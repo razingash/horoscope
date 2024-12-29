@@ -12,29 +12,27 @@ from moon.constants import eph
 from moon.crud import get_moon_schedule_path, add_moon_schedule
 
 
-async def get_moon_phases(session, date): # CHANGE ?
+async def get_moon_phases(session, year, month): # CHANGE ?
     """а так ли надо хранить эти данные в базе данных, учитывая что основные данные хранятся, в json, а поля модели
         служат только для навигации по этим данным"""
-    file_path = await get_moon_schedule_path(session=session, date=date) # DB
+    file_path = await get_moon_schedule_path(session, year, month) # DB
 
     if file_path is None:
-        folder_path = os.path.join(MEDIA_DIR, f"moon/{date.year}")
-        file_path = os.path.join(folder_path, f"{date.month}.json")
-
+        folder_path = os.path.join(MEDIA_DIR, f"moon/{year}")
+        file_path = os.path.join(folder_path, f"{month}.json")
+        print(folder_path, file_path)
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        await add_moon_schedule(session, event_date=date, path=file_path)
+        await add_moon_schedule(session, year=year, month=month, path=file_path)
 
     if not os.path.exists(file_path): # create json file with monthly data
         phases = moon_phases(eph)
         ts = load.timescale()
 
-        first_day_of_month = datetime(date.year, date.month, 1)
-        last_day_of_month = datetime(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
-
-        t_start = ts.utc(first_day_of_month.year, first_day_of_month.month, first_day_of_month.day)
-        t_end = ts.utc(last_day_of_month.year, last_day_of_month.month, last_day_of_month.day)
+        last_day_of_month = calendar.monthrange(year, month)[1]
+        t_start = ts.utc(year, month, 1)
+        t_end = ts.utc(year, month, last_day_of_month)
 
         times, phase_names = find_discrete(t_start, t_end, phases)
 

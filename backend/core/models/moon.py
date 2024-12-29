@@ -1,15 +1,21 @@
-from sqlalchemy import String, Date, Enum
+from sqlalchemy import String, Enum, SmallInteger, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models.base import Base
 from core.models.utils import LanguagesChoices, MoonEventsChoices
 
 
+"""из-за мультиязычности создать декодеры на фронте не получится"""
+
 class MoonEventsSchedule(Base): # in UTC
-    date: Mapped[str] = mapped_column(Date, unique=True, index=True)
+    year: Mapped[int] = mapped_column(SmallInteger, nullable=False)
+    month: Mapped[int] = mapped_column(SmallInteger, nullable=False)
     path: Mapped[str] = mapped_column(String(150), nullable=False)
 
     __tablename__ = "moon_events_schedule"
+    __table_args__ = (
+        UniqueConstraint('year', 'month', name='idx_year_month'),
+    )
 
 
 class MoonEventDescription(Base):
