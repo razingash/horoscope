@@ -1,5 +1,9 @@
 from enum import Enum
 
+__all__ = [
+    "LanguagesChoices", "PlanetsChoices", "ZodiacsChoices", "HousesChoices", "AspectsChoices", "MoonEventsChoices",
+    "HoroscopeTypes"
+]
 
 class LanguagesChoices(str, Enum):
     russian = "ru"
@@ -14,7 +18,7 @@ class HoroscopeTypes(int, Enum):
     annual = 4
 
 
-class PlanetsChoices(int, Enum): # change name
+class PlanetsChoices(int, Enum):
     sun = 1
     mercury = 2
     venus = 3
@@ -69,9 +73,3 @@ class MoonEventsChoices(int, Enum):
     blue_moon = 1
     micromoon = 2
     supermoon = 3
-
-
-__all__ = [
-    "LanguagesChoices", "PlanetsChoices", "ZodiacsChoices", "HousesChoices", "AspectsChoices", "MoonEventsChoices",
-    "HoroscopeTypes"
-]

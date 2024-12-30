@@ -3,7 +3,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models import Base, LanguagesChoices, MoonEventsChoices
 
-
+__all__ = [
+    'MoonEventsSchedule', 'MoonEventDescription'
+]
 """из-за мультиязычности создать декодеры на фронте не получится"""
 
 class MoonEventsSchedule(Base): # in UTC

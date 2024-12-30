@@ -4,6 +4,10 @@ from sqlalchemy.orm import Mapped, mapped_column
 from core.models import Base, PlanetsChoices, ZodiacsChoices, LanguagesChoices, HousesChoices, AspectsChoices, \
     HoroscopeTypes
 
+__all__ = [
+    'PlanetPatterns', 'AspectPatterns', 'HousePatterns', 'HoroscopePatterns'
+]
+
 """
 надо будет прокачать всю систему тут, потому что если объединить всю систему то скорее всего можно будет нормализовать
 базу данных, скорее всего уменьшится количество запросов к паттернам
@@ -42,9 +46,3 @@ class HoroscopePatterns(Base):
     zodiac: Mapped[ZodiacsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
     aspect: Mapped[AspectsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
-
-
-"""__all__ = [
-    'PlanetPatterns', 'AspectPatterns', 'HousePatterns', 'HoroscopePatterns'
-]
-"""
