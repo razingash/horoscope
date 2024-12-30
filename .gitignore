@@ -8,3 +8,5 @@ backend/tests/load/.pytest_cache
 backend/db.sqlite3
 backend/logs.log
 backend/alembic/versions/*
+backend/patterns
+backend/fixtures

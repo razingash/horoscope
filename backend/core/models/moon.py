@@ -1,8 +1,7 @@
 from sqlalchemy import String, Enum, SmallInteger, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.models.base import Base
-from core.models.utils import LanguagesChoices, MoonEventsChoices
+from core.models import Base, LanguagesChoices, MoonEventsChoices
 
 
 """из-за мультиязычности создать декодеры на фронте не получится"""
