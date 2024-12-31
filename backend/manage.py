@@ -2,7 +2,6 @@ import argparse
 import asyncio
 import json
 import os
-import random
 
 from colorama import init, Fore, Style
 
@@ -68,8 +67,7 @@ def initialization():
 def makemigrations(): # improve
     try:
         alembic_cfg = Config("alembic.ini")
-        message = str(random.random())
-        command.revision(alembic_cfg, message=message, autogenerate=True)
+        command.revision(alembic_cfg, message=None, autogenerate=True)
     except Exception as e:
         print(e)
     else:

@@ -10,3 +10,4 @@ backend/logs.log
 backend/alembic/versions/*
 backend/patterns
 backend/fixtures
+frontend/node_modules
