@@ -1,7 +1,14 @@
+import {BrowserRouter} from "react-router-dom";
+import "./styles/index.css"
+import AppRouter from "./components/AppRouter";
+import Header from "./components/UI/Header";
 
 function App() {
   return (
-    <div></div>
+    <BrowserRouter>
+      <Header/>
+      <AppRouter/>
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,99 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+/*тут расположить универсальные стили для всех страниц и заголовка*/
+
+:root {
+    --background: #05000d;
+    --line-1: #9d00ff;
+    --hovered-element: #55ff00; /*16*/
+    --clicked-element: #a91eff; /*4*/
+    --blocked-element: #ff6500; /*7*/
+    --test-element: #00eeff; /*13*/
+    /*find better names*/
+    --text-color-1: #b134ff;
+    --text-color-2: #a168ff;
+    --text-color-3: #ae7dff;
+    /*tests*/
+    --container-1: #210059;
+    --container-2: #6000FF;
+    --container-3: #05000d; /*пошаманить с прозрачностью*/
+}
+
+body {
+    background: var(--background);
+}
+
+.svg__list {
+    position: absolute;
+    visibility: hidden;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+}
+
+.section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px;
+    max-height: 60px;
+    border-bottom: 2px solid;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.header__field {
+    /*later*/
+}
+
+.header__items {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 29px;
+    font-family: sans-serif;
+    margin: 0 5%;
+}
+
+.header__item {
+    text-decoration: none;
+    -webkit-user-select: none;
+    user-select: none;
+    color: #fff;
+    cursor: pointer;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+
+.header__item:hover {
+    color: var(--blocked-element);
+}
+.header__item:focus {
+    color: var(--clicked-element);
+}
+.header__item:active {
+    color: var(--test-element);
+}
+
+
+@media (max-width: 768px) {
+    .header__field {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+    }
+}
