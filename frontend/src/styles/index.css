@@ -24,6 +24,13 @@
 
 body {
     background: var(--background);
+    color: #fff;
+}
+
+.mainframe {
+    margin: 70px 20px 20px 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .svg__list {
@@ -78,6 +85,13 @@ body {
     z-index: 1;
 }
 
+.section__main {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+}
+
 
 .header__item:hover {
     color: var(--blocked-element);
@@ -91,9 +105,18 @@ body {
 
 
 @media (max-width: 768px) {
+    .section__main {
+        margin: 56px 10px 20px 10px;
+    }
     .header__field {
         display: flex;
         align-items: center;
         flex-grow: 1;
+    }
+}
+
+@media (max-width: 500px) {
+    .section__main {
+        margin: 56px 0 20px 0;
     }
 }

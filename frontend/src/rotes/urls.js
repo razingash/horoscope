@@ -1,6 +1,6 @@
-import {lazy} from "react";
+import MoonCalendar from "../pages/MoonCalendar";
+import Main from "../pages/Main";
 
-const Main = lazy(() => import("../pages/Main"));
 
 export const publicRotes = [
     {path: "/", component: <Main/>, key: "main"},
@@ -12,6 +12,6 @@ export const publicRotes = [
     {path: "/horoscope/weekly/", component: <Main/>, key: "horoscope-weekly"},
     {path: "/horoscope/monthly/", component: <Main/>, key: "horoscope-monthly"},
     {path: "/horoscope/annual/", component: <Main/>, key: "horoscope-annual"},
-    {path: "/moon/calendar/:date/", component: <Main/>, key: "moon-calendar"},
-    {path: "/solar-system/:date/", component: <Main/>, key: "solar-system-now"},
+    {path: "/moon/calendar/", component: <MoonCalendar/>, key: "moon-calendar"},
+    {path: "/solar-system/:date/", component: <Main/>, key: "solar-system-now"}, /*возможно тоже лучше будет убрать дату*/
 ]

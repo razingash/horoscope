@@ -1,0 +1,45 @@
+
+.area__calendar {
+
+}
+
+.field__moon_calendar{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.calendar__header {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.calendar__header__item {
+    display: flex;
+    justify-content: center;
+    width: calc(100% / 7);
+    border: 1px solid #fff;
+}
+
+.calendar__cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% / 7);
+    border: 1px solid #fff;
+    min-height: 2em;
+}
+
+
+
+/*тестовые эелементы будут либо удалены либо изменены*/
+.testing__h1 {
+    display: flex;
+    justify-content: space-between;
+}
+.testing__switching {
+    display: flex;
+    gap: 30px;
+    cursor: pointer;
+}
