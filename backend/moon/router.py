@@ -11,6 +11,3 @@ async def get_moon_info_by_timezone(year: int, month: int, session: AsyncSession
     phases = await get_moon_phases(session=session, year=year, month=month)
     return {'moon phases': phases}
 
-@router.get(path="/lunar-forecast")
-async def get_test_info():
-    return {'info': 'test info'}

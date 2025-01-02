@@ -67,6 +67,7 @@ class AspectsChoices(int, Enum):
     square = 3
     trine = 4
     sextile = 5
+    none = 6
 
 
 class MoonEventsChoices(int, Enum):

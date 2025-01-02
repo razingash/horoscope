@@ -8,7 +8,7 @@ from skyfield.api import load
 from skyfield.almanac import find_discrete, moon_phases
 
 from core.config import MEDIA_DIR
-from moon.constants import eph
+from core.constants import eph
 from moon.crud import get_moon_schedule_path, add_moon_schedule
 
 
