@@ -11,7 +11,7 @@
     --hovered-element: #55ff00; /*16*/
     --clicked-element: #a91eff; /*4*/
     --blocked-element: #ff6500; /*7*/
-    --test-element: #00eeff; /*13*/
+    --test-element: #00eeff; /*13, ugly in header, md use for links*/
     /*find better names*/
     --text-color-1: #b134ff;
     --text-color-2: #a168ff;
@@ -43,6 +43,13 @@ body {
     height: 0;
 }
 
+.svg__zodiac {
+    width: 100%;
+    height: 150px;
+    fill: url(#gradient);
+    /*from #e40ff3 to #05d6fe*/
+}
+
 .section__header {
     display: flex;
     justify-content: space-between;
@@ -55,6 +62,7 @@ body {
     left: 0;
     right: 0;
     z-index: 10;
+    background: var(--background);
 }
 
 .header__field {
@@ -98,10 +106,10 @@ body {
 }
 .header__item:focus {
     color: var(--clicked-element);
-}
+}/*
 .header__item:active {
     color: var(--test-element);
-}
+}*/
 
 
 @media (max-width: 768px) {

@@ -1,0 +1,14 @@
+
+.area__horoscope {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.field__prediction {
+    display: flex;
+}
+
+.container__prediction {
+
+}
