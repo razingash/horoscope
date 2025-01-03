@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './../styles/moon.css'
+import {calculateMoonIllumination} from "../utils/utils";
 
 const MoonCalendar = () => {
     const [days, setDays] = useState([]);
@@ -55,7 +56,8 @@ const MoonCalendar = () => {
             setMonth(month + 1);
         }
     }
-
+    const date = new Date(2030, 5, 17, 11, 19, 10)
+    console.log(calculateMoonIllumination(date))
 
     return (
         <div className={"section__main"}>
@@ -80,6 +82,11 @@ const MoonCalendar = () => {
                     {days.map((day, index) => (
                         <div className={"calendar__cell"} key={index}>{day ?? ''}</div>
                     ))}
+                </div>
+                <div className={"field__moon__illumination"}>
+                    <svg className={"svg__moon"}>
+                        <use xlinkHref={"#moon"}></use>
+                    </svg>
                 </div>
             </div>
         </div>

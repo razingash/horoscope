@@ -1,6 +1,8 @@
 import calendar
 import json
 import os
+
+import ephem
 import pytz
 
 from datetime import datetime
@@ -62,6 +64,7 @@ async def get_moon_phases(session, year, month): # CHANGE ?
             moon_phase_data = {
                 "datetime": date_time.strftime('%Y-%m-%d %H:%M:%S'),
                 "phase": phase,
+                #"illumination": find_moon_illumante(datetime=date_time)
             }
 
             if moon_event:
@@ -76,6 +79,12 @@ async def get_moon_phases(session, year, month): # CHANGE ?
 
     return lunar_schedule
 
+
+"""
+def find_moon_illumante(datetime): # later this will be moved to the frontend
+    '''основная проблема в том что на питоне погрешность около 1%, на js 15%'''
+    return round(ephem.Moon(datetime).moon_phase * 100, 2)
+"""
 
 def find_moon_phases(times, phase_names):
     phases = []
@@ -122,7 +131,7 @@ def find_supermoons_and_micromoons(phases):
             astrometric_earth, astrometric_moon = earth.at(t), moon.at(t)
             distance = (astrometric_earth - astrometric_moon).distance()
 
-            if distance.km < 361_857: # приблизительная величина(мб найти точнее)
+            if distance.km < 361_857:
                 supermoons.append((local_time, phase))
 
             if distance.km > 405_500:
