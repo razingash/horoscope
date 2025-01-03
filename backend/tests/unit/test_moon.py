@@ -5,7 +5,7 @@ from skyfield.almanac import moon_phases
 from skyfield.api import load
 from skyfield.searchlib import find_discrete
 
-from backend.moon.constants import eph
+from core.constants import eph
 from services.moon.services import find_moon_phases, find_blue_moons, find_supermoons_and_micromoons
 
 

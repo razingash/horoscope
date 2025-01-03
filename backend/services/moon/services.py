@@ -20,7 +20,7 @@ async def get_moon_phases(session, year, month): # CHANGE ?
     if file_path is None:
         folder_path = os.path.join(MEDIA_DIR, f"moon/{year}")
         file_path = os.path.join(folder_path, f"{month}.json")
-        print(folder_path, file_path)
+
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -41,17 +41,32 @@ async def get_moon_phases(session, year, month): # CHANGE ?
         supermoons, micromoons = find_supermoons_and_micromoons(mp)
 
         lunar_schedule = {
-            "supermoons": [
-                {"date": sm_time.strftime('%Y-%m-%d %H:%M:%S'), "phase": sm_phase} for sm_time, sm_phase in supermoons
-            ],
-            "micromoons": [
-                {"date": sm_time.strftime('%Y-%m-%d %H:%M:%S'), "phase": sm_phase} for sm_time, sm_phase in micromoons
-            ],
-            "blue moons": blue_moons,
-            "moon_phases": [
-                {"time": time.strftime('%Y-%m-%d %H:%M:%S'), "phase": phase} for time, phase in mp
-            ]
+            "moon_phases": []
         }
+
+        for date_time, phase in mp:
+            """ important to know - situations when lunar events and moon phases have different times cannot be """
+            moon_event = []
+
+            if phase == 'Full Moon' and date_time.month == 1:
+                moon_event.append("wolfmoon")
+
+            if date_time in blue_moons:
+                moon_event.append("blue moon")
+
+            if (date_time, phase) in supermoons:
+                moon_event.append("supermoon")
+            if (date_time, phase) in micromoons:
+                moon_event.append("micromoon")
+
+            moon_phase_data = {
+                "datetime": date_time.strftime('%Y-%m-%d %H:%M:%S'),
+                "phase": phase,
+            }
+
+            if moon_event:
+                moon_phase_data["events"] = moon_event
+            lunar_schedule["moon_phases"].append(moon_phase_data)
 
         with open(file_path, 'w') as json_file:
             json.dump(lunar_schedule, json_file, indent=4, ensure_ascii=False)
