@@ -3,18 +3,18 @@ import pytz
 from core.constants import eph
 
 
-def calculate_transits_for_natal_chart(start_date, end_date):
-    planets = {
-        'sun': eph['sun'],
-        'mercury': eph['mercury barycenter'],
-        'venus': eph['venus barycenter'],
-        'moon': eph['earth barycenter'],
-        'mars': eph['mars barycenter'],
-        'jupiter': eph['jupiter barycenter'],
-        'saturn': eph['saturn barycenter'],
-        'uranus': eph['uranus barycenter'],
-        'neptune': eph['neptune barycenter'],
-        'pluto': eph['pluto barycenter']
+async def calculate_transits_for_natal_chart(start_date, end_date):
+    planets = { # PlanetsChoices
+        1: eph['sun'],
+        2: eph['mercury barycenter'],
+        3: eph['venus barycenter'],
+        4: eph['earth barycenter'],
+        5: eph['mars barycenter'],
+        6: eph['jupiter barycenter'],
+        7: eph['saturn barycenter'],
+        8: eph['uranus barycenter'],
+        9: eph['neptune barycenter'],
+        10: eph['pluto barycenter']
     }
     observer = eph['earth']
     local_transits = {}
@@ -23,7 +23,6 @@ def calculate_transits_for_natal_chart(start_date, end_date):
     for planet_name, target_planet in planets.items():
         times, elongations = [], []
         t = start_date
-
         while t.tt <= end_date.tt:
             apparent_position = observer.at(t).observe(target_planet)
 
@@ -80,6 +79,6 @@ def calculate_aspects_for_natal_chart(transits):
                         daily_aspects.append((planet1, planet2, aspect_name))
                         break
 
-        aspects[date.strftime('%Y-%m-%d %H:%M:%S')] = daily_aspects
+        aspects[date.strftime('%Y-%m-%d')] = daily_aspects
 
     return aspects

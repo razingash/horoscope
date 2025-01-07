@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './../styles/moon.css'
-import {calculateMoonIllumination} from "../utils/utils";
+import {calculateMoonIlluminationPercent} from "../utils/utils";
+import MoonPhase from "../components/MoonPhase";
 
 const MoonCalendar = () => {
     const [days, setDays] = useState([]);
@@ -56,8 +57,8 @@ const MoonCalendar = () => {
             setMonth(month + 1);
         }
     }
-    const date = new Date(2030, 5, 17, 11, 19, 10)
-    console.log(calculateMoonIllumination(date))
+    //const date = new Date(2030, 5, 17, 11, 19, 10)
+    //console.log(calculateMoonIlluminationPercent(date))
 
     return (
         <div className={"section__main"}>

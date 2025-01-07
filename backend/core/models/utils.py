@@ -19,31 +19,31 @@ class HoroscopeTypes(int, Enum):
 
 
 class PlanetsChoices(int, Enum):
-    sun = 1
-    mercury = 2
-    venus = 3
-    moon = 4
-    mars = 5
-    jupiter = 6
-    saturn = 7
-    uranus = 8
-    neptune = 9
-    pluto = 10
+    Sun = 1
+    Mercury = 2
+    Venus = 3
+    Moon = 4
+    Mars = 5
+    Jupiter = 6
+    Saturn = 7
+    Uranus = 8
+    Neptune = 9
+    Pluto = 10
 
 
 class ZodiacsChoices(int, Enum):
-    aries = 1
-    taurus = 2
-    gemini = 3
-    cancer = 4
-    leo = 5
-    virgo = 6
-    libra = 7
-    scorpio = 8
-    sagittarius = 9
-    capricorn = 10
-    aquarius = 11
-    pisces = 12
+    Aries = 1
+    Taurus = 2
+    Gemini = 3
+    Cancer = 4
+    Leo = 5
+    Virgo = 6
+    Libra = 7
+    Scorpio = 8
+    Sagittarius = 9
+    Capricorn = 10
+    Aquarius = 11
+    Pisces = 12
 
 
 class HousesChoices(int, Enum):
@@ -62,12 +62,12 @@ class HousesChoices(int, Enum):
 
 
 class AspectsChoices(int, Enum):
+    none = 0
     conjunction = 1
     opposition = 2
     square = 3
     trine = 4
     sextile = 5
-    none = 6
 
 
 class MoonEventsChoices(int, Enum):
