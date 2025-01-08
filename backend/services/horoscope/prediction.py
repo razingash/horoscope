@@ -1,4 +1,9 @@
+import json
+import os
 from datetime import datetime
+
+from core.config import MEDIA_DIR
+
 
 def select_more_suitable_aspects(horoscope_data):
     """selects more suitable planets for a particular zodiac sign, if necessary"""
@@ -32,15 +37,18 @@ def select_more_suitable_aspects(horoscope_data):
         primary_planet = prioritized_planets[0]
         planet_aspects = [aspect for aspect in aspects if primary_planet in aspect[:2]]
 
-        prioritized_aspects = sorted(
-            planet_aspects,
-            key=lambda aspect: zodiac_planet_association[sign].index(
-                aspect[1] if aspect[0] == primary_planet else aspect[0])
-            if (aspect[1] if aspect[0] == primary_planet else aspect[0]) in zodiac_planet_association[sign] else len(
-                zodiac_planet_association[sign])
-        )
+        if planet_aspects:
+            prioritized_aspects = sorted(
+                planet_aspects,
+                key=lambda aspect: zodiac_planet_association[sign].index(
+                    aspect[1] if aspect[0] == primary_planet else aspect[0])
+                if (aspect[1] if aspect[0] == primary_planet else aspect[0]) in zodiac_planet_association[sign]
+                else len(zodiac_planet_association[sign])
+            )
+            best_aspect = prioritized_aspects[0][2]
+        else:
+            best_aspect = 0
 
-        best_aspect = prioritized_aspects[0]
         house = planet_houses[primary_planet]
         suitable_aspects.append({"zodiac": sign, "planet": primary_planet, "house": house, "aspect": best_aspect})
 
@@ -71,12 +79,12 @@ def get_zodiac_sign_and_house(elongation): #! Настроить location_offset
 def generate_horoscope(transits):
     """Генерирует гороскоп на основе транзитов и аспектов между планетами."""
     data = {}
-    aspect_definitions = {
-        'conjunction': (0, 8),  # Соединение: 0° ± 8°
-        'opposition': (180, 8),  # Оппозиция: 180° ± 8°
-        'square': (90, 8),  # Квадрат: 90° ± 8°
-        'trine': (120, 8),  # Тригон: 120° ± 8°
-        'sextile': (60, 6)  # Секстиль: 60° ± 6°
+    aspect_definitions = {  # details in AspectsChoices
+        1: (0, 8),  # conjunction: 0° ± 8°
+        2: (180, 8),  # opposition: 180° ± 8°
+        3: (90, 8),  # square: 90° ± 8°
+        4: (120, 8),  # trine: 120° ± 8°
+        5: (60, 6)  # sextile: 60° ± 6°
     }
 
     planet_names = list(transits.keys())
@@ -110,7 +118,33 @@ def generate_horoscope(transits):
             "planet_houses": planet_houses,
             "aspects": daily_aspects
         }
-
+    print(data)
     elevated_data = {'daily horoscope': select_more_suitable_aspects(data[date]) for date in data}
 
     return elevated_data
+
+
+def document_prediction(year, month, day, horoscope_data, prediction_type) -> str:
+    if prediction_type == 1: # daily
+        folder_path = os.path.join(MEDIA_DIR, f"horoscope/daily/{year}/{month}")
+        file_path = os.path.join(folder_path, f"{day}.json")
+    elif prediction_type == 2: # weekly
+        week_of_month = (day - 1) // 7 + 1
+        folder_path = os.path.join(MEDIA_DIR, f"horoscope/weekly/{year}/{month}")
+        file_path = os.path.join(folder_path, f"{week_of_month}.json")
+    elif prediction_type == 3: # monthly
+        folder_path = os.path.join(MEDIA_DIR, f"horoscope/monthly/{year}")
+        file_path = os.path.join(folder_path, f"{month}.json")
+    elif prediction_type == 4: # annual
+        folder_path = os.path.join(MEDIA_DIR, f"horoscope/annual")
+        file_path = os.path.join(folder_path, f"{year}.json")
+    else:
+        raise Exception('later improve')
+
+    if not os.path.exists(folder_path): # create folder
+        os.makedirs(folder_path)
+
+    with open(file_path, 'w') as json_file: # create json file
+        json.dump(horoscope_data, json_file, indent=2, ensure_ascii=False)
+
+    return file_path

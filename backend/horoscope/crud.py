@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from skyfield.api import load
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.models import HoroscopePatterns
+from core.models import HoroscopePatterns, Horoscope
 from services.horoscope.natal_chart import calculate_transits_for_natal_chart
 from services.horoscope.prediction import generate_horoscope
 
