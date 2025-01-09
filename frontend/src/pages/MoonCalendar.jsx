@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {use, useEffect, useState} from 'react';
 import './../styles/moon.css'
 import {calculateMoonIlluminationPercent} from "../utils/utils";
-import MoonPhase from "../components/MoonPhase";
 
 const MoonCalendar = () => {
     const [days, setDays] = useState([]);
     const [month, setMonth] = useState(null);
     const [year, setYear] = useState(null);
+    const rad = Math.PI / 180;
 
     /*возможно стоит объединить два хука в один*/
     useEffect(() => {
@@ -57,8 +57,50 @@ const MoonCalendar = () => {
             setMonth(month + 1);
         }
     }
-    //const date = new Date(2030, 5, 17, 11, 19, 10)
-    //console.log(calculateMoonIlluminationPercent(date))
+
+    const calculateShadowPath = () => {
+        const date = new Date();
+        const illuminationPercent = calculateMoonIlluminationPercent(date);
+
+        const phase = 180//180 - (illuminationPercent / 100) * 180;
+        const f = Math.cos(phase * rad);
+
+        const shadowLeftX = 50 - f * 25;
+        const shadowRightX = Math.abs(f) * 50;
+
+        const shadowTopY = 0;
+        const shadowBottomY = 100;
+        let leftCurveStrength, rightCurveStrength;
+
+        if (phase < 180) { // waxing
+            leftCurveStrength = 20 + (phase / 180) * 20;
+            rightCurveStrength = 20;
+        } else { // waning
+            leftCurveStrength = 20;
+            rightCurveStrength = 20 + ((360 - phase) / 180) * 20;
+        }
+
+        const oppositeSideShift = phase < 180 ? shadowRightX : shadowLeftX;
+
+        return `
+            M 0,50
+            Q ${shadowLeftX - leftCurveStrength},${shadowTopY} 50,${shadowTopY}
+            Q ${oppositeSideShift  + rightCurveStrength},${shadowTopY} 100,50  
+            Q ${oppositeSideShift  + rightCurveStrength},${shadowBottomY} 50,${shadowBottomY}
+            Q ${shadowLeftX - leftCurveStrength},${shadowBottomY} 0,50
+            Z
+        `;
+    }
+
+    const updateMoonShadow = (path) => {
+        const moonShadow = document.querySelector("#moon-shadow");
+        moonShadow.setAttribute("d", path);
+    }
+
+    useEffect(() => {
+        const shadowPath = calculateShadowPath();
+        updateMoonShadow(shadowPath);
+    }, [])
 
     return (
         <div className={"section__main"}>
