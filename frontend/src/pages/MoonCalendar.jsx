@@ -1,12 +1,16 @@
-import React, {use, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './../styles/moon.css'
-import {calculateMoonIlluminationPercent} from "../utils/utils";
+import {calculateMoonIlluminationPercent, generateShadowPath} from "../utils/utils";
 
+/*позже улучшить код чтобы луна расчитывалась от таймзоны(сохраненной)
+ или если будет возможность(интернет) от текущего положения*/
 const MoonCalendar = () => {
     const [days, setDays] = useState([]);
     const [month, setMonth] = useState(null);
     const [year, setYear] = useState(null);
-    const rad = Math.PI / 180;
+    const [shadowPath, setShadowPath] = useState(null);
+    const [isMoonRising, setIsMoonRising] = useState(null); // later store it in local storage
+    const [moonCovering, setMoonCovering] = useState(null);
 
     /*возможно стоит объединить два хука в один*/
     useEffect(() => {
@@ -15,7 +19,6 @@ const MoonCalendar = () => {
         const currentMonth = currentDate.getMonth() + 1;
         setYear(currentYear);
         setMonth(currentMonth);
-
     }, [])
 
     useEffect(() => { /*вроде есть лучший способ получить правильный день недели*/
@@ -35,6 +38,32 @@ const MoonCalendar = () => {
             setDays([...calendarDays, ...Array(neededCells).fill(null)]);
         }
     }, [year, month])
+
+    useEffect(() => {
+        moonCovering && setShadowPath(generateShadowPath(moonCovering));
+    }, [moonCovering])
+
+    useEffect(() => {
+        const date = new Date();
+        const illumination = calculateMoonIlluminationPercent(date);
+
+        if (isMoonRising == null) {
+            let previousTime = new Date(date.getTime() - 24 * 60 * 60 * 1000);
+            const previousIllumination = calculateMoonIlluminationPercent(previousTime);
+            if (illumination > previousIllumination) { //"Восходящая Луна"
+                setIsMoonRising(true);
+            } else if (illumination < previousIllumination) { // "Убывающая Луна"
+                setIsMoonRising(false);
+            } // else - no changes
+        }
+        if (isMoonRising === true) {
+            let moonCovering = illumination * 1.8
+            setMoonCovering(moonCovering);
+        } else if (isMoonRising === false) {
+            let moonCovering = illumination * 1.8 * 2
+            setMoonCovering(moonCovering);
+        }
+    }, [isMoonRising])
 
     const handlePreviousMonth = () => {
         if (month === 1) {
@@ -58,49 +87,6 @@ const MoonCalendar = () => {
         }
     }
 
-    const calculateShadowPath = () => {
-        const date = new Date();
-        const illuminationPercent = calculateMoonIlluminationPercent(date);
-
-        const phase = 180//180 - (illuminationPercent / 100) * 180;
-        const f = Math.cos(phase * rad);
-
-        const shadowLeftX = 50 - f * 25;
-        const shadowRightX = Math.abs(f) * 50;
-
-        const shadowTopY = 0;
-        const shadowBottomY = 100;
-        let leftCurveStrength, rightCurveStrength;
-
-        if (phase < 180) { // waxing
-            leftCurveStrength = 20 + (phase / 180) * 20;
-            rightCurveStrength = 20;
-        } else { // waning
-            leftCurveStrength = 20;
-            rightCurveStrength = 20 + ((360 - phase) / 180) * 20;
-        }
-
-        const oppositeSideShift = phase < 180 ? shadowRightX : shadowLeftX;
-
-        return `
-            M 0,50
-            Q ${shadowLeftX - leftCurveStrength},${shadowTopY} 50,${shadowTopY}
-            Q ${oppositeSideShift  + rightCurveStrength},${shadowTopY} 100,50  
-            Q ${oppositeSideShift  + rightCurveStrength},${shadowBottomY} 50,${shadowBottomY}
-            Q ${shadowLeftX - leftCurveStrength},${shadowBottomY} 0,50
-            Z
-        `;
-    }
-
-    const updateMoonShadow = (path) => {
-        const moonShadow = document.querySelector("#moon-shadow");
-        moonShadow.setAttribute("d", path);
-    }
-
-    useEffect(() => {
-        const shadowPath = calculateShadowPath();
-        updateMoonShadow(shadowPath);
-    }, [])
 
     return (
         <div className={"section__main"}>
@@ -127,8 +113,9 @@ const MoonCalendar = () => {
                     ))}
                 </div>
                 <div className={"field__moon__illumination"}>
-                    <svg className={"svg__moon"}>
+                    <svg className={"svg__moon"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                         <use xlinkHref={"#moon"}></use>
+                        {shadowPath && <path id="moon-shadow" d={shadowPath.toString()} />}
                     </svg>
                 </div>
             </div>

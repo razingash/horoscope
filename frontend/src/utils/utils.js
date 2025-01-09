@@ -4,6 +4,29 @@
 и тд*/
 
 const PI = Math.PI;
+
+export const generateShadowPath = (phase, r=50) => {
+    const angle = (phase * PI) / 180;
+    const f = Math.cos(angle);
+    let pathData = "";
+    if (phase <= 180) {
+        for (let i = 0; i <= 360; i++) {
+            const cosi = Math.cos(i * PI / 180);
+            let x = cosi > 0 ? f * r * cosi + 50 : r * cosi + 50;
+            let y = r * Math.sin(i * PI / 180) + 50;
+            pathData += (i === 0 ? "M" : "L") + x + "," + y + " ";
+        }
+    } else {
+        for (let i = 0; i <= 360; i++) {
+            const cosi = Math.cos(i * PI / 180);
+            let x = cosi < 0 ? f * r * cosi + 50 : r * cosi + 50;
+            let y = r * Math.sin(i * PI / 180) + 50;
+            pathData += (i === 0 ? "M" : "L") + x + "," + y + " ";
+        }
+    }
+    return pathData;
+};
+
 export const calculateMoonIlluminationPercent = (dt) => {
     /*функция для расчета освещенности(Видимости) луны в зависимости от времени*/
     let T = (toJulianDay(dt) - 2451545.0) / 36525.0;
