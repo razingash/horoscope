@@ -7,7 +7,7 @@ __all__ = [
 
 class LanguagesChoices(str, Enum):
     russian = "ru"
-    english = "eng"
+    english = "en"
     polish = "pl"
 
 
