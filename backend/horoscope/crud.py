@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 
 from skyfield.api import load
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,7 +16,7 @@ async def get_horoscope_daily(session: AsyncSession): # ! позже кэшир�
 
     transits = await calculate_transits_for_natal_chart(start_date=start_date, end_date=start_date)
 
-    aspects = generate_horoscope(transits)
+    aspects = generate_horoscope(transits, horoscope_type=1)
 
     horoscope = {}
     print(aspects)
@@ -32,3 +32,15 @@ async def get_horoscope_daily(session: AsyncSession): # ! позже кэшир�
     """
     return aspects
 
+
+async def get_horoscope_annual(session: AsyncSession):
+    ts = load.timescale()
+    start_date = ts.utc(date(datetime.now().year, 1, 1))
+
+    transits = await calculate_transits_for_natal_chart(start_date=start_date, end_date=start_date)
+
+    data = generate_horoscope(transits, horoscope_type=4)
+
+    print(data)
+
+    return data

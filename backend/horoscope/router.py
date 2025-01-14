@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import db_session
-from horoscope.crud import get_horoscope_daily
+from horoscope.crud import get_horoscope_daily, get_horoscope_annual
 
 router = APIRouter()
 
@@ -11,3 +11,8 @@ async def get_daily_horoscope(session: AsyncSession = Depends(db_session.session
     horoscope = await get_horoscope_daily(session=session)
     return horoscope
 
+
+@router.get(path='/annual/')
+async def get_annual_horoscope(session: AsyncSession = Depends(db_session.session_dependency)):
+    horoscope = await get_horoscope_annual(session=session)
+    return horoscope

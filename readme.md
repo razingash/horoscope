@@ -26,11 +26,32 @@ calculation of the phases of the moon, and lunar events, such as blue moon, micr
 horoscope - daily/weekly/monthly/yearly. 
 - the calculation takes place depending on the zodiac sign, planet, house, aspect.
 - -  the only problem is the large number of required patterns. It takes time to generate such a large number
-#### horoscope variation
-1) for living zodiacs
-- zodiacs(12) * planets(10) * houses(12) * aspects(5) = 7200
-2) for dead zodiacs (without planets in their fields)
-- ...
+
+#### horoscope variations
+daily and annual horoscopes analyze data on a specific day, while monthly and weekly horoscopes analyze data over a period of time
+
+1) daily
+- for living zodiacs
+- - zodiacs(12) * planets(10) * houses(12) * aspects(6) = 8640
+- for dead zodiacs (without planets in their fields)
+- - zodiacs(12) * moon position(12) * moon monthly cycle(30)? = 4320
+2) weekly
+- for living zodiacs
+- - ...
+- for dead zodiacs
+- - ...
+3) monthly
+- for living zodiacs
+- - ...
+- for dead zodiacs
+- - ...
+4) Annual
+
+this forecast is based on the position of the planets at the beginning of the year
+- for living zodiacs
+- - zodiacs(12) * planets(10) * houses(12) = 1440
+- for dead zodiacs
+- - zodiacs(12) * where is the ruling planet(12) * houses(12) = 1728
 
 ### Natal chart
 will be implemented before the patterns are uploaded to GitHub

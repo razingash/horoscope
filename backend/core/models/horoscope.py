@@ -1,7 +1,8 @@
 from sqlalchemy import Enum, String, SmallInteger, UniqueConstraint, Date
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.models import Base, PlanetsChoices, ZodiacsChoices, LanguagesChoices, HousesChoices, AspectsChoices, \
+from core.models._base import Base
+from core.models.utils import PlanetsChoices, ZodiacsChoices, LanguagesChoices, HousesChoices, AspectsChoices, \
     HoroscopeTypes
 
 __all__ = [

@@ -5,8 +5,144 @@ from datetime import datetime
 from core.config import MEDIA_DIR
 
 
-def select_more_suitable_aspects(horoscope_data):
-    """selects more suitable planets for a particular zodiac sign, if necessary"""
+def generate_horoscope(transits, horoscope_type: int):
+    """Генерирует гороскоп на основе транзитов и аспектов между планетами."""
+    if horoscope_type == 1:
+        return horoscope_daily(transits)
+    elif horoscope_type == 2:
+        pass
+    elif horoscope_type == 3:
+        pass
+    elif horoscope_type == 4:
+        return horoscope_annual(transits)
+
+
+def horoscope_daily(transits):
+    data = {}
+    aspect_definitions = {  # details in AspectsChoices
+        1: (0, 8),  # conjunction: 0° ± 8°
+        2: (180, 8),  # opposition: 180° ± 8°
+        3: (90, 8),  # square: 90° ± 8°
+        4: (120, 8),  # trine: 120° ± 8°
+        5: (60, 6)  # sextile: 60° ± 6°
+    }
+
+    planet_names = list(transits.keys())
+    dates = [time for time, _ in transits[planet_names[0]]]
+
+    for i, date in enumerate(dates): #! когда решу как генерировать недельный и месячный убрать тут цикл
+        daily_aspects = []
+        planet_positions = {planet: transits[planet][i][1] for planet in planet_names}
+
+        planet_zodiacs, planet_houses = {}, {}
+        for planet, position in planet_positions.items():
+            sign, house = get_zodiac_sign_and_house(position)
+            if sign not in planet_zodiacs:
+                planet_zodiacs[sign] = []
+            planet_zodiacs[sign].append(planet)
+            planet_houses[planet] = house
+
+        for j in range(len(planet_names)):
+            for k in range(j + 1, len(planet_names)):
+                planet1 = planet_names[j]
+                planet2 = planet_names[k]
+                angle = abs(planet_positions[planet1] - planet_positions[planet2]) % 360
+                angle = min(angle, 360 - angle)
+
+                for aspect_name, (ideal_angle, orb) in aspect_definitions.items():
+                    if abs(angle - ideal_angle) <= orb:
+                        daily_aspects.append((planet1, planet2, aspect_name))
+
+        data[date] = {
+            "planet_positions": planet_zodiacs,
+            "planet_houses": planet_houses,
+            "aspects": daily_aspects
+        }
+
+    elevated_data = {'horoscope': select_more_suitable_planet_with_aspect(data[date]) for date in data}
+
+    return elevated_data
+
+
+def horoscope_annual(transits):
+    planet_names = list(transits.keys())
+    #print(transits) # если и фиксить транзиты(временные значения) то только после гороскопов 2 типа
+    planet_positions = {planet: transits[planet][0][1] for planet in planet_names}
+    zodiac_planets, planet_house = {}, {}
+    zodiac_house_shift = calculate_house_shift()
+
+    for planet, position in planet_positions.items():
+        sign, house = get_zodiac_sign_and_house(position)
+        if sign not in zodiac_planets:
+            zodiac_planets[sign] = []
+
+        zodiac_planets[sign].append(planet)
+        planet_house[planet] = house
+
+    correlated_data = correlate_annual_horoscope_data(zodiac_planets, planet_house, zodiac_house_shift)
+    return correlated_data
+
+
+def correlate_annual_horoscope_data(zodiac_planets: dict, planet_house: dict, zodiac_house_shift: int) -> list:
+    """correlates the positions of planets in the field of the zodiac sign or the main planet of the sign,
+    if the sign is empty
+    """
+
+    zodiac_planet_association = [
+        [5, 1, 6, 10], # Aries ['Mars', 'Sun', 'Jupiter', 'Pluto']
+        [3, 4, 7, 2],  # Taurus ['Venus', 'Moon', 'Saturn', 'Mercury']
+        [2, 3, 8, 6],  # Gemini ['Mercury', 'Venus', 'Uranus', 'Jupiter']
+        [4, 6, 9, 3],  # Cancer ['Moon', 'Jupiter', 'Neptune', 'Venus']
+        [1, 6, 5, 2],  # Leo ['Sun', 'Jupiter', 'Mars', 'Mercury']
+        [2, 7, 3],     # Virgo ['Mercury', 'Saturn', 'Venus']
+        [3, 7, 2, 4],  # Libra ['Venus', 'Saturn', 'Mercury', 'Moon']
+        [10, 5, 4, 9], # Scorpio ['Pluto', 'Mars', 'Moon', 'Neptune']
+        [6, 1, 9, 5],  # Sagittarius ['Jupiter', 'Sun', 'Neptune', 'Mars']
+        [7, 5, 3, 2],  # Capricorn ['Saturn', 'Mars', 'Venus', 'Mercury']
+        [8, 7, 2, 3],  # Aquarius ['Uranus', 'Saturn', 'Mercury', 'Venus']
+        [9, 6, 3, 4]   # Pisces ['Neptune', 'Jupiter', 'Venus', 'Moon']
+    ]
+
+    new_zodiac_planets = {}
+    for sign, planets in zodiac_planets.items():
+        sign += 1
+        prioritized_planets = sorted(
+            planets,
+            key=lambda planet: zodiac_planet_association[sign].index(planet)
+            if planet in zodiac_planet_association[sign] else len(zodiac_planet_association[sign])
+        )
+
+        primary_planet = prioritized_planets[0]
+        new_zodiac_planets[sign] = primary_planet
+
+    new_data = []
+    for i in range(1, 13):
+        zodiac_planet = new_zodiac_planets.get(i)
+        house = (i + zodiac_house_shift - 1) % 12 + 1
+        if zodiac_planet:
+            pattern = {
+                "zodiac": i,
+                "house": house,
+                "planet": zodiac_planet,
+            }
+        else:
+            primary_planet_for_sign = zodiac_planet_association[i - 1][0]
+            house_position = planet_house.get(primary_planet_for_sign, None)
+
+            pattern = {
+                "zodiac": i,
+                "house": house,
+                "planet_position": house_position,  # Primary planet position of the sign
+            }
+
+        new_data.append(pattern)
+
+    return new_data
+
+
+def select_more_suitable_planet_with_aspect(horoscope_data): # позже возможно сделать из этой функции корелляцию, или задействовать её
+    #! IMPROVE | сделать код для гороскопов 2 типа и ТОЛЬКО ПОТОМ начать менять это непотребство
+    """selects more suitable planets and aspects for a particular zodiac sign, if necessary"""
     zodiac_planet_association = [
         [5, 1, 6, 10], # Aries ['Mars', 'Sun', 'Jupiter', 'Pluto']
         [3, 4, 7, 2],  # Taurus ['Venus', 'Moon', 'Saturn', 'Mercury']
@@ -55,6 +191,12 @@ def select_more_suitable_aspects(horoscope_data):
     return suitable_aspects
 
 
+def calculate_house_shift():
+    ascendant = calculate_ascendant()
+    shift = ascendant % 360
+    return int(shift // 30)
+
+
 def calculate_ascendant(base_ascendant=0, location_offset=0): # defaul function for calculating ascendant
     """можно также добавить функцию для рассчета сцендента если нечего делать будет"""
     day_of_year = datetime.today().timetuple().tm_yday
@@ -74,54 +216,6 @@ def get_zodiac_sign_and_house(elongation): #! Настроить location_offset
     house = int(house_position // 30) + 1 # same as in HousesChoices
 
     return sign_index, house
-
-
-def generate_horoscope(transits):
-    """Генерирует гороскоп на основе транзитов и аспектов между планетами."""
-    data = {}
-    aspect_definitions = {  # details in AspectsChoices
-        1: (0, 8),  # conjunction: 0° ± 8°
-        2: (180, 8),  # opposition: 180° ± 8°
-        3: (90, 8),  # square: 90° ± 8°
-        4: (120, 8),  # trine: 120° ± 8°
-        5: (60, 6)  # sextile: 60° ± 6°
-    }
-
-    planet_names = list(transits.keys())
-    dates = [time for time, _ in transits[planet_names[0]]]
-
-    for i, date in enumerate(dates):
-        daily_aspects = []
-        planet_positions = {planet: transits[planet][i][1] for planet in planet_names}
-
-        planet_zodiacs, planet_houses = {}, {}
-        for planet, position in planet_positions.items():
-            sign, house = get_zodiac_sign_and_house(position)
-            if sign not in planet_zodiacs:
-                planet_zodiacs[sign] = []
-            planet_zodiacs[sign].append(planet)
-            planet_houses[planet] = house
-
-        for j in range(len(planet_names)):
-            for k in range(j + 1, len(planet_names)):
-                planet1 = planet_names[j]
-                planet2 = planet_names[k]
-                angle = abs(planet_positions[planet1] - planet_positions[planet2]) % 360
-                angle = min(angle, 360 - angle)
-
-                for aspect_name, (ideal_angle, orb) in aspect_definitions.items():
-                    if abs(angle - ideal_angle) <= orb:
-                        daily_aspects.append((planet1, planet2, aspect_name))
-
-        data[date] = {
-            "planet_positions": planet_zodiacs,
-            "planet_houses": planet_houses,
-            "aspects": daily_aspects
-        }
-    print(data)
-    elevated_data = {'daily horoscope': select_more_suitable_aspects(data[date]) for date in data}
-
-    return elevated_data
 
 
 def document_prediction(year, month, day, horoscope_data, prediction_type) -> str:
