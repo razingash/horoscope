@@ -10,6 +10,7 @@ from skyfield.almanac import find_discrete, moon_phases
 
 from core.config import MEDIA_DIR
 from core.constants import eph
+from core.models import MoonPhasesChoices
 from moon.crud import get_moon_schedule_path, add_moon_schedule
 
 
@@ -49,7 +50,7 @@ async def get_moon_phases(session, year, month): # CHANGE ?
             """ important to know - situations when lunar events and moon phases have different times cannot be """
             moon_event = []
 
-            if phase == 'Full Moon' and date_time.month == 1:
+            if phase == MoonPhasesChoices.FULL_MOON and date_time.month == 1:
                 moon_event.append("wolfmoon")
 
             if date_time in blue_moons:
@@ -57,6 +58,7 @@ async def get_moon_phases(session, year, month): # CHANGE ?
 
             if (date_time, phase) in supermoons:
                 moon_event.append("supermoon")
+
             if (date_time, phase) in micromoons:
                 moon_event.append("micromoon")
 
@@ -80,7 +82,9 @@ async def get_moon_phases(session, year, month): # CHANGE ?
 
 def find_moon_phases(times, phase_names):
     phases = []
-    phase_labels = ['New Moon', 'First Quarter', 'Full Moon', 'Last Quarter']
+    phase_labels = [MoonPhasesChoices.NEW_MOON, MoonPhasesChoices.FIRST_QUARTER,
+                    MoonPhasesChoices.FULL_MOON, MoonPhasesChoices.THIRD_QUARTER
+                    ]
 
     for t, phase in zip(times, phase_names):
         utc_time = t.utc_iso()
@@ -93,7 +97,7 @@ def find_moon_phases(times, phase_names):
 
 
 def find_blue_moons(phases):
-    full_moons = [p[0] for p in phases if p[1] == 'Full Moon']
+    full_moons = [p[0] for p in phases if p[1] == MoonPhasesChoices.FULL_MOON]
     blue_moons = []
     current_month = None
     moon_count = 0
@@ -117,7 +121,7 @@ def find_supermoons_and_micromoons(phases):
     supermoons, micromoons = [], []
     ts = load.timescale()
     for local_time, phase in phases:
-        if phase == 'Full Moon':
+        if phase == MoonPhasesChoices.FULL_MOON:
             t = ts.from_datetime(local_time) # координаты Земли и Луны в момент времени t
 
             astrometric_earth, astrometric_moon = earth.at(t), moon.at(t)

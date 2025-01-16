@@ -34,7 +34,7 @@ daily and annual horoscopes analyze data on a specific day, while monthly and we
 - for living zodiacs
 - - zodiacs(12) * planets(10) * houses(12) * aspects(6) = 8640
 - for dead zodiacs (without planets in their fields)
-- - zodiacs(12) * moon position(12) * moon monthly cycle(30)? = 4320
+- - zodiacs(12) * moon position(12) * moon monthly cycle(30) = 4320
 2) weekly
 - for living zodiacs
 - - zodiacs(12) * planets(10) * houses(12) * lunar phase(4)= 5760

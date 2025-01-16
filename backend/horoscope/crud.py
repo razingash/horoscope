@@ -3,7 +3,6 @@ from datetime import datetime, timezone, date
 from skyfield.api import load
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.models import HoroscopePatterns, Horoscope
 from horoscope.utils import get_season, get_current_lunar_phase
 from services.horoscope.natal_chart import calculate_transits_for_natal_chart
 from services.horoscope.prediction import generate_horoscope
@@ -19,20 +18,9 @@ async def get_horoscope_daily(session: AsyncSession): # ! позже кэшир�
 
     transits = await calculate_transits_for_natal_chart(start_date=start_date, end_date=start_date)
 
-    aspects = generate_horoscope(transits, horoscope_type=1)
+    data = generate_horoscope(transits, horoscope_type=1)
 
-    horoscope = {}
-    """
-    for zodiac in range(1, 12):
-        horoscope_patterns = session.query(HoroscopePatterns).filter(
-            HoroscopePatterns.language == "ru", # кастомное поле, задействовать после генерации всех предсказаний
-            HoroscopePatterns.zodiac == zodiac,
-            HoroscopePatterns.planet == planet,
-            HoroscopePatterns.house == house,
-            HoroscopePatterns.aspect == aspect
-        )
-    """
-    return aspects
+    return data
 
 
 async def get_horoscope_weekly(session: AsyncSession):

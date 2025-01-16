@@ -2,7 +2,7 @@ from sqlalchemy import String, Enum, SmallInteger, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.models.utils import MoonEventsChoices, LanguagesChoices
-from core.models._base import Base
+from core.models.base import Base
 
 __all__ = [
     'MoonEventsSchedule', 'MoonEventDescription'
