@@ -129,13 +129,15 @@ async def fill_static_data_without_fixtures() -> None:
                                                    house=house, main_planet_position=main_planet, lunar_phase=lunar_phase)
 
                             await commit_if_batch_full()
-                for i in range(1, 31):
-                    # daily void
-                    description = f'daily horoscope for {language.name}-{zodiac.name}-' \
-                                  f'{planet.name}-{house.name}-lunar staget {i}'
-                    create_horoscope_entry(language, description, zodiac, HoroscopeVoidDaily, moon_cycle=i)
+                for moon_position in ZodiacsChoices:
+                    for i in range(1, 31):
+                        # daily void
+                        description = f'daily horoscope for {language.name}-{zodiac.name}-' \
+                                      f'{house.name}-{moon_position.name}-lunar stage {i}'
+                        create_horoscope_entry(language, description, zodiac, HoroscopeVoidDaily,
+                                               moon_position=moon_position, moon_cycle=i)
 
-                    await commit_if_batch_full()
+                        await commit_if_batch_full()
 
         await session.commit()
 

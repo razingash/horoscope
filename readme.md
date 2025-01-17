@@ -32,26 +32,26 @@ daily and annual horoscopes analyze data on a specific day, while monthly and we
 
 1) daily
 - for living zodiacs
-- - zodiacs(12) * planets(10) * houses(12) * aspects(6) = 8640
+- - zodiacs(12) * planets(10) * houses(12) * aspects(6) = 8640 * 3 = 25920
 - for dead zodiacs (without planets in their fields)
-- - zodiacs(12) * moon position(12) * moon monthly cycle(30) = 4320
+- - zodiacs(12) * moon position(12) * moon monthly cycle(30) = 4320 * 3 = 12960
 2) weekly
 - for living zodiacs
-- - zodiacs(12) * planets(10) * houses(12) * lunar phase(4)= 5760
+- - zodiacs(12) * planets(10) * houses(12) * lunar phase(4)= 5760 * 3 = 17280
 - for dead zodiacs
-- - zodiacs(12) * where is the ruling planet(12) * houses(12) * lunar phase(4) = 6912
+- - zodiacs(12) * where is the ruling planet(12) * houses(12) * lunar phase(4) = 6912 * 3 = 20736
 3) monthly
 - for living zodiacs
-- - zodiacs(12) * planets(10) * houses(12) * seasons?(4)= 5760
+- - zodiacs(12) * planets(10) * houses(12) * seasons?(4)= 5760 * 3 = 17280
 - for dead zodiacs
-- - zodiacs(12) * where is the ruling planet(12) * houses(12) = 1728
+- - zodiacs(12) * where is the ruling planet(12) * houses(12) = 1728 * 3 = 5184
 4) Annual
 
 this forecast is based on the position of the planets at the beginning of the year
 - for living zodiacs
-- - zodiacs(12) * planets(10) * houses(12) = 1440
+- - zodiacs(12) * planets(10) * houses(12) = 1440 * 3 = 4320
 - for dead zodiacs
-- - zodiacs(12) * where is the ruling planet(12) * houses(12) = 1728
+- - zodiacs(12) * where is the ruling planet(12) * houses(12) = 1728 * 3 = 5184
 
 ### Natal chart
 will be implemented before the patterns are uploaded to GitHub

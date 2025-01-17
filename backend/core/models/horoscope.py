@@ -51,11 +51,13 @@ class HoroscopeFitDaily(HoroscopePreciseBase):
 
 class HoroscopeVoidDaily(HoroscopeBase):
     zodiac: Mapped[ZodiacsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
+    moon_position: Mapped[ZodiacsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
     moon_cycle: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
 
     __tablename__ = "horoscope_daily_void"
     __table_args__ = (
-        UniqueConstraint('language', 'zodiac', 'moon_cycle', name='idx_language_zodiac_moon_cycle'),
+        UniqueConstraint('language', 'zodiac', 'moon_position', 'moon_cycle',
+                         name='idx_language_zodiac_moon_position_moon_cycle'),
     )
 
     @validates('moon_cycle')
