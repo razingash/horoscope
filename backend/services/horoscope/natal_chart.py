@@ -1,6 +1,6 @@
 import pytz
 
-from core.constants import eph
+from core.config import eph
 
 
 async def calculate_transits_for_natal_chart(start_date, end_date):

@@ -3,7 +3,7 @@ from alembic.config import Config
 from colorama import Style, Fore
 
 
-def command_makemigrations(): # improve
+def command_makemigrations():
     try:
         alembic_cfg = Config("alembic.ini")
         command.revision(alembic_cfg, message=None, autogenerate=True)

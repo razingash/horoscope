@@ -2,24 +2,59 @@ import json
 import os
 from asyncio import run as asyncio_run
 
+import sqlalchemy.exc
 from colorama import Fore, Style
-
+from alembic.config import Config
+from alembic.script import ScriptDirectory
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 from .makemigrations import command_makemigrations
 from .migrate import command_migrate
 from core.database import db_session
-from core.config import BASE_DIR
+from core.config import BASE_DIR, DATABASE, ALEMBIC_INI_PATH
 from core.models import HoroscopeFitDaily, HoroscopeVoidDaily, HoroscopeFitWeekly, HoroscopeVoidWeekly, \
     HoroscopeFitMonthly, HoroscopeVoidMonthly, HoroscopeFitAnnual, HoroscopeVoidAnnual, \
     HousesChoices, PlanetsChoices, AspectsChoices, ZodiacsChoices, LanguagesChoices, MoonPhasesChoices, EarthSeasons
 
 
 def command_initialization():
+    database_url = DATABASE
+
+    try:
+        is_migrations_applied = asyncio_run(are_migrations_applied(database_url))
+    except sqlalchemy.exc.OperationalError: # database doesn't exist
+        initialize()
+    else:
+        if not is_migrations_applied:
+            initialize()
+
+
+def initialize():
+    """initializes database with static data"""
     command_makemigrations()
     command_migrate()
     asyncio_run(generate_static_data())
 
 
-async def fill_static_data_without_fixtures():
+async def are_migrations_applied(database_url: str) -> bool:
+    """checks the relevance of migrations"""
+
+    engine = create_async_engine(database_url, echo=True)
+    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+    async with async_session() as session:
+        result = await session.execute(text("SELECT version_num FROM alembic_version LIMIT 1"))
+        applied_version = result.scalar()
+
+        alembic_cfg = Config(ALEMBIC_INI_PATH)
+        script_dir = ScriptDirectory.from_config(alembic_cfg)
+        latest_revision = script_dir.get_heads()[0]
+
+        return applied_version == latest_revision
+
+
+async def fill_static_data_without_fixtures() -> None:
     async with db_session.session_factory() as session:
         batch_counter = 0
 
@@ -42,62 +77,62 @@ async def fill_static_data_without_fixtures():
                 for house in HousesChoices:
                     for planet in PlanetsChoices:
                         # annual
-                        description = f'annual horoscope for {language.value}-{zodiac.value}-' \
-                                      f'{planet.value}-{house.value}'
+                        description = f'annual horoscope for {language.name}-{zodiac.name}-' \
+                                      f'{planet.name}-{house.name}'
                         create_horoscope_entry(language, description, zodiac, HoroscopeFitAnnual,
                                                house=house, planet=planet)
 
                         await commit_if_batch_full()
                         for aspect in AspectsChoices:
                             # daily
-                            description = f'daily horoscope for {language.value}-{zodiac.value}-' \
-                                          f'{planet.value}-{house.value}-{aspect.value}'
+                            description = f'daily horoscope for {language.name}-{zodiac.name}-' \
+                                          f'{planet.name}-{house.name}-{aspect.name}'
                             create_horoscope_entry(language, description, zodiac, HoroscopeFitDaily,
                                                    house=house, planet=planet, aspect=aspect)
 
                             await commit_if_batch_full()
                         for lunar_phase in MoonPhasesChoices:
                             # weekly
-                            description = f'weekly horoscope for {language.value}-{zodiac.value}-' \
-                                          f'{planet.value}-{house.value}-{lunar_phase.value}'
+                            description = f'weekly horoscope for {language.name}-{zodiac.name}-' \
+                                          f'{planet.name}-{house.name}-{lunar_phase.name}'
                             create_horoscope_entry(language, description, zodiac, HoroscopeFitWeekly,
                                                    house=house, planet=planet, lunar_phase=lunar_phase)
 
                             await commit_if_batch_full()
                         for season in EarthSeasons:
                             # monthly
-                            description = f'monthly horoscope for {language.value}-{zodiac.value}-' \
-                                          f'{planet.value}-{house.value}-{EarthSeasons(season)}'
+                            description = f'monthly horoscope for {language.name}-{zodiac.name}-' \
+                                          f'{planet.name}-{house.name}-{EarthSeasons(season)}'
                             create_horoscope_entry(language, description, zodiac, HoroscopeFitMonthly,
                                                    house=house, planet=planet, season=season)
 
                             await commit_if_batch_full()
                     for main_planet in ZodiacsChoices:
                         # monthly void
-                        description = f'annual horoscope for {language.value}-{zodiac.value}-' \
-                                      f'{planet.value}-{house.value}-{main_planet.value}'
+                        description = f'annual horoscope for {language.name}-{zodiac.name}-' \
+                                      f'{planet.name}-{house.name}-{main_planet.name}'
                         create_horoscope_entry(language, description, zodiac, HoroscopeVoidMonthly,
                                                house=house, main_planet_position=main_planet)
 
                         # annual void
-                        description = f'monthly horoscope for {language.value}-{zodiac.value}-' \
-                                      f'{planet.value}-{house.value}-{main_planet.value}'
+                        description = f'monthly horoscope for {language.name}-{zodiac.name}-' \
+                                      f'{planet.name}-{house.name}-{main_planet.name}'
                         create_horoscope_entry(language, description, zodiac, HoroscopeVoidAnnual,
                                                house=house, main_planet_position=main_planet)
 
                         await commit_if_batch_full()
                         for lunar_phase in MoonPhasesChoices:
                             # weekly void
-                            description = f'weekly horoscope for {language.value}-{zodiac.value}-' \
-                                          f'{planet.value}-{house.value}-{main_planet.value}-{lunar_phase.value}'
+                            description = f'weekly horoscope for {language.name}-{zodiac.name}-' \
+                                          f'{planet.name}-{house.name}-{main_planet.name}-{lunar_phase.name}'
                             create_horoscope_entry(language, description, zodiac, HoroscopeVoidWeekly,
                                                    house=house, main_planet_position=main_planet, lunar_phase=lunar_phase)
 
                             await commit_if_batch_full()
                 for i in range(1, 31):
                     # daily void
-                    description = f'daily horoscope for {language.value}-{zodiac.value}-' \
-                                  f'{planet.value}-{house.value}-lunar staget {i}'
+                    description = f'daily horoscope for {language.name}-{zodiac.name}-' \
+                                  f'{planet.name}-{house.name}-lunar staget {i}'
                     create_horoscope_entry(language, description, zodiac, HoroscopeVoidDaily, moon_cycle=i)
 
                     await commit_if_batch_full()
@@ -116,8 +151,8 @@ async def fill_static_data_with_fixtures(fixtures_dir, file_names):
             return True
 
 
-async def generate_static_data():
-    print(Style.BRIGHT + Fore.LIGHTYELLOW_EX + 'generating static data')
+async def generate_static_data() -> None:
+    print(Style.BRIGHT + Fore.LIGHTYELLOW_EX + 'generating static data...')
 
     fixtures_dir = os.path.join(BASE_DIR, 'fixtures', 'horoscope', 'daily')
     file_names = ['1_aries', '2_taurus', '3_gemini', '4_cancer', '5_leo', '6_virgo', '7_libra', '8_scorpius',
@@ -131,9 +166,9 @@ async def generate_static_data():
         if len(files) > 0:
             raise FileNotFoundError
     except FileNotFoundError:
-        print([file for file in files], sep='\n')
         print(Style.BRIGHT + Fore.RED + 'not all fixtures are defined')
-        print('Values will be replaced with test ones')
+        [print(Fore.RED + file) for file in files]
+        print(Fore.LIGHTWHITE_EX + 'Values will be replaced with test ones')
         await fill_static_data_without_fixtures() # если возникнет sqlalchemy.exc.IntegrityError то бд уже создана(странно)
         print(Style.BRIGHT + Fore.GREEN + 'Static data generation has been completed')
     else:

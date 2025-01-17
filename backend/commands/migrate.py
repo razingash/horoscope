@@ -9,4 +9,4 @@ def command_migrate():
     except Exception as e:
         print(e)
     else:
-        print(Style.BRIGHT + Fore.GREEN + 'success')
+        print(Style.BRIGHT + Fore.GREEN + 'migrations finished')
