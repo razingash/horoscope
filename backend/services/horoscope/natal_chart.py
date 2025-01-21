@@ -3,7 +3,9 @@ import pytz
 from core.config import eph
 
 
-async def calculate_transits_for_natal_chart(start_date, end_date):
+def calculate_transits_for_natal_chart(start_date, end_date):
+    """! сейчас временная зона - UTC, это подходит для гороскопа но для натальной фигни нужно будет выбирать временную зону
+    """
     planets = { # PlanetsChoices
         1: eph['sun'],
         2: eph['mercury barycenter'],

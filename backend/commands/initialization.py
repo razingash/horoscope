@@ -1,4 +1,3 @@
-import json
 import os
 from asyncio import run as asyncio_run
 
@@ -14,8 +13,8 @@ from .migrate import command_migrate
 from core.database import db_session
 from core.config import BASE_DIR, DATABASE, ALEMBIC_INI_PATH
 from core.models import HoroscopeFitDaily, HoroscopeVoidDaily, HoroscopeFitWeekly, HoroscopeVoidWeekly, \
-    HoroscopeFitMonthly, HoroscopeVoidMonthly, HoroscopeFitAnnual, HoroscopeVoidAnnual, \
-    HousesChoices, PlanetsChoices, AspectsChoices, ZodiacsChoices, LanguagesChoices, MoonPhasesChoices, EarthSeasons
+    HoroscopeFitMonthly, HoroscopeVoidMonthly, HoroscopeFitAnnual, HoroscopeVoidAnnual,  HousesChoices, PlanetsChoices,\
+    AspectsChoices, ZodiacsChoices, LanguagesChoices, MoonPhasesChoices, EarthSeasons
 
 
 def command_initialization():
@@ -42,7 +41,7 @@ async def are_migrations_applied(database_url: str) -> bool:
 
     engine = create_async_engine(database_url, echo=True)
     async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
+    #попробовать это  async with db_session.session_factory() as session:
     async with async_session() as session:
         result = await session.execute(text("SELECT version_num FROM alembic_version LIMIT 1"))
         applied_version = result.scalar()

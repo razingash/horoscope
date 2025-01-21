@@ -134,3 +134,28 @@ def find_supermoons_and_micromoons(phases):
                 micromoons.append((local_time, phase))
 
     return supermoons, micromoons
+
+
+def find_previous_new_moon(choosed_time: datetime) -> datetime:
+    ts = load.timescale()
+
+    t0 = ts.utc(choosed_time.year, choosed_time.month, choosed_time.day - 30)
+    t1 = ts.utc(choosed_time.year, choosed_time.month, choosed_time.day + 1)
+
+    phases = moon_phases(eph)
+    times, phase_types = find_discrete(t0, t1, phases)
+
+    for t, phase in zip(times, phase_types):
+        if phase == 0 and t.utc_datetime() <= choosed_time:
+            return t.utc_datetime()
+
+
+def get_moon_cycle(choosed_time: datetime) -> int:
+    """returns one of 30 moon cycles"""
+    new_moon = find_previous_new_moon(choosed_time)
+
+    days_since_new_moon = (choosed_time - new_moon).days + (choosed_time - new_moon).seconds / 86400
+    current_day = round(days_since_new_moon % 29.53)
+
+    return current_day
+

@@ -1,14 +1,14 @@
 from sqlalchemy import Enum, String, SmallInteger, UniqueConstraint, Date
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
-from core.models.base import Base, HoroscopePreciseBase, HoroscopeVoidBase, HoroscopeBase
+from core.models.base import Base, HoroscopePreciseBase, HoroscopeVoidBase, HoroscopeBase, HoroscopeCompleteBase
 from core.models.utils import PlanetsChoices, ZodiacsChoices, LanguagesChoices, HousesChoices, AspectsChoices, \
     HoroscopeTypes, MoonPhasesChoices, EarthSeasons
 
 __all__ = [
     'PatternsPlanet', 'PatternsAspect', 'PatternsHouse', 'HoroscopeFitDaily', 'HoroscopeVoidDaily',
     'HoroscopeFitWeekly', 'HoroscopeVoidWeekly', 'HoroscopeFitMonthly', 'HoroscopeVoidMonthly', 'HoroscopeFitAnnual',
-    'HoroscopeVoidAnnual', 'Horoscope'
+    'HoroscopeVoidAnnual', 'Horoscope', 'HoroscopeDaily', 'HoroscopeWeekly', 'HoroscopeMonthly', 'HoroscopeAnnual'
 ]
 
 """
@@ -42,7 +42,7 @@ class PatternsHouse(Base): # used for natal chart description
 class HoroscopeFitDaily(HoroscopePreciseBase):
     aspect: Mapped[AspectsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
 
-    __tablename__ = "horoscope_daily"
+    __tablename__ = "horoscope_daily_fit"
     __table_args__ = (
         UniqueConstraint('language', 'zodiac', 'house', 'planet', 'aspect',
                          name='idx_language_zodiac_house_planet_aspect'),
@@ -70,7 +70,7 @@ class HoroscopeVoidDaily(HoroscopeBase):
 class HoroscopeFitWeekly(HoroscopePreciseBase):
     lunar_phase: Mapped[MoonPhasesChoices] = mapped_column(SmallInteger, nullable=False, index=True)
 
-    __tablename__ = "horoscope_weekly"
+    __tablename__ = "horoscope_weekly_fit"
     __table_args__ = (
         UniqueConstraint('language', 'zodiac', 'house', 'planet', 'lunar_phase',
                          name='idx_language_zodiac_house_planet_lunar_phase'),
@@ -90,7 +90,7 @@ class HoroscopeVoidWeekly(HoroscopeVoidBase):
 class HoroscopeFitMonthly(HoroscopePreciseBase):
     season: Mapped[EarthSeasons] = mapped_column(SmallInteger, nullable=False, index=True)
 
-    __tablename__ = "horoscope_monthly"
+    __tablename__ = "horoscope_monthly_fit"
     __table_args__ = (
         UniqueConstraint('language', 'zodiac', 'house', 'planet', 'season',
                          name='idx_language_zodiac_house_planet_season'),
@@ -102,11 +102,45 @@ class HoroscopeVoidMonthly(HoroscopeVoidBase):
 
 
 class HoroscopeFitAnnual(HoroscopePreciseBase):
-    __tablename__ = "horoscope_annual"
+    __tablename__ = "horoscope_annual_fit"
 
 
 class HoroscopeVoidAnnual(HoroscopeVoidBase):
     __tablename__ = "horoscope_annual_void"
+
+
+class HoroscopeDaily(HoroscopeCompleteBase):
+    day: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+    month: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+
+    __tablename__ = "horoscope_daily"
+    __table_args__ = (
+        UniqueConstraint('language', 'zodiac', 'year', 'month', 'day', name='idx_language_zodiac_year_month_day'),
+    )
+
+
+class HoroscopeWeekly(HoroscopeCompleteBase):
+    week_number: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+    month: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+
+    __tablename__ = "horoscope_weekly"
+    __table_args__ = (
+        UniqueConstraint('language', 'zodiac', 'year', 'month', 'week_number',
+                         name='idx_language_zodiac_year_month_week_number'),
+    )
+
+
+class HoroscopeMonthly(HoroscopeCompleteBase):
+    month: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+
+    __tablename__ = "horoscope_monthly"
+    __table_args__ = (
+        UniqueConstraint('language', 'zodiac', 'year', 'month', name='idx_language_zodiac_year_month'),
+    )
+
+
+class HoroscopeAnnual(HoroscopeCompleteBase):
+    __tablename__ = "horoscope_annual"
 
 
 class Horoscope(Base): # существует для хранения пути к json данным
