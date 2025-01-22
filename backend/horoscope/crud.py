@@ -11,6 +11,9 @@ from core.models import HoroscopeDaily, LanguagesChoices, HoroscopeWeekly, Horos
 from horoscope.utils import get_season
 from services.horoscope.prediction import get_week_number, generate_horoscope
 
+"""
+кэшировать апи для этого проиложения на уровне Nginx используя json и временные зоны
+"""
 """! отправлять текущую дату и временную зону с фронта чтобы не быть подвязанным под сервер
 !! надо будет тогда сделать проверку, чтобы дата была в пределах +- 1, чтобы нельзя было спарсить все наперед
 """

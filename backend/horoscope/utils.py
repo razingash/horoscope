@@ -1,25 +1,24 @@
 from datetime import datetime
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
+from core.models import EarthSeasons
 from services.moon.services import get_moon_phases
 
 
 def get_season(month: int) -> int:
     if month in [12, 1, 2]:
-        return 4 # winter
+        return EarthSeasons.WINTER
     elif month in [3, 4, 5]:
-        return 1 # spring
+        return EarthSeasons.SPRING
     elif month > 9:
-        return 3 # autumn
+        return EarthSeasons.AUTUMN
     else:
-        return 2 # summer
+        return EarthSeasons.SUMMER
 
 
-async def get_current_lunar_phase(session: AsyncSession, year: int, month: int, day: int) -> int:
+def get_current_lunar_phase(year: int, month: int, day: int) -> int:
     """Is this really supposed to be here?"""
-    lunar_phases = await get_moon_phases(session, year, month)
-    lunar_phases = lunar_phases['moon_phases']
+    lunar_phases = get_moon_phases(year, month)
+
     target_date = datetime(year, month, day)
 
     for item in lunar_phases:

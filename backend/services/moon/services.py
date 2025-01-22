@@ -1,81 +1,55 @@
 import calendar
-import json
-import os
-
 import pytz
 
 from datetime import datetime
+
 from skyfield.api import load
 from skyfield.almanac import find_discrete, moon_phases
 
-from core.config import MEDIA_DIR
 from core.config import eph
-from core.models import MoonPhasesChoices
-from moon.crud import get_moon_schedule_path, add_moon_schedule
+from core.models import MoonPhasesChoices, MoonEventsChoices
 
 
-async def get_moon_phases(session, year, month): # CHANGE ?
-    """а так ли надо хранить эти данные в базе данных, учитывая что основные данные хранятся, в json, а поля модели
-        служат только для навигации по этим данным"""
-    file_path = await get_moon_schedule_path(session, year, month) # DB
+def get_moon_phases(year: int, month: int, timezone=None) -> list:
+    phases = moon_phases(eph)
+    ts = load.timescale()
 
-    if file_path is None:
-        folder_path = os.path.join(MEDIA_DIR, f"moon/{year}")
-        file_path = os.path.join(folder_path, f"{month}.json")
+    last_day_of_month = calendar.monthrange(year, month)[1]
+    t_start = ts.utc(year, month, 1)
+    t_end = ts.utc(year, month, last_day_of_month)
 
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
+    times, phase_names = find_discrete(t_start, t_end, phases)
 
-        await add_moon_schedule(session, year=year, month=month, path=file_path)
+    mp = find_moon_phases(times, phase_names)
+    blue_moons = find_blue_moons(mp)
+    supermoons, micromoons = find_supermoons_and_micromoons(mp)
 
-    if not os.path.exists(file_path): # create json file with monthly data
-        phases = moon_phases(eph)
-        ts = load.timescale()
+    lunar_schedule = []
 
-        last_day_of_month = calendar.monthrange(year, month)[1]
-        t_start = ts.utc(year, month, 1)
-        t_end = ts.utc(year, month, last_day_of_month)
+    for date_time, phase in mp:
+        """ important to know - situations when lunar events and moon phases have different times cannot be """
+        moon_event = []
 
-        times, phase_names = find_discrete(t_start, t_end, phases)
+        if phase == MoonPhasesChoices.FULL_MOON and date_time.month == 1:
+            moon_event.append(MoonEventsChoices.WOLFMOON.value)
 
-        mp = find_moon_phases(times, phase_names)
-        blue_moons = find_blue_moons(mp)
-        supermoons, micromoons = find_supermoons_and_micromoons(mp)
+        if date_time in blue_moons:
+            moon_event.append(MoonEventsChoices.BLUE_MOON.value)
 
-        lunar_schedule = {
-            "moon_phases": []
+        if (date_time, phase) in supermoons:
+            moon_event.append(MoonEventsChoices.SUPERMOON.value)
+
+        if (date_time, phase) in micromoons:
+            moon_event.append(MoonEventsChoices.MICROMOON.value)
+
+        moon_phase_data = {
+            "datetime": date_time.strftime('%Y-%m-%d %H:%M:%S'),
+            "phase": phase,
         }
 
-        for date_time, phase in mp:
-            """ important to know - situations when lunar events and moon phases have different times cannot be """
-            moon_event = []
-
-            if phase == MoonPhasesChoices.FULL_MOON and date_time.month == 1:
-                moon_event.append("wolfmoon")
-
-            if date_time in blue_moons:
-                moon_event.append("blue moon")
-
-            if (date_time, phase) in supermoons:
-                moon_event.append("supermoon")
-
-            if (date_time, phase) in micromoons:
-                moon_event.append("micromoon")
-
-            moon_phase_data = {
-                "datetime": date_time.strftime('%Y-%m-%d %H:%M:%S'),
-                "phase": phase,
-            }
-
-            if moon_event:
-                moon_phase_data["events"] = moon_event
-            lunar_schedule["moon_phases"].append(moon_phase_data)
-
-        with open(file_path, 'w') as json_file:
-            json.dump(lunar_schedule, json_file, indent=4, ensure_ascii=False)
-    else:
-        with open(file_path, 'r') as json_file:
-            lunar_schedule = json.load(json_file)
+        if moon_event:
+            moon_phase_data["events"] = moon_event
+        lunar_schedule.append(moon_phase_data)
 
     return lunar_schedule
 

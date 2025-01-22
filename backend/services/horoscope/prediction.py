@@ -1,10 +1,6 @@
-import json
-import os
 from datetime import datetime, timezone
-
 from sqlalchemy import select
 
-from core.config import MEDIA_DIR
 from core.models import PlanetsChoices, LanguagesChoices, HoroscopeVoidAnnual, HoroscopeFitAnnual, HoroscopeVoidMonthly, \
     HoroscopeFitMonthly, HoroscopeFitWeekly, HoroscopeVoidWeekly, HoroscopeFitDaily, HoroscopeVoidDaily
 from horoscope.utils import get_current_lunar_phase
@@ -194,42 +190,6 @@ def correlate_horoscope_data_daily( # возможно лучше будет д�
     return new_data
 
 
-def correlate_horoscope_data_daily_2(
-        planet_zodiacs: dict, planet_houses: dict, aspects: list, zodiac_planet_association: list
-) -> list:
-    """ Daily horoscope\n
-    selects more suitable planets and aspects for a particular zodiac sign, if necessary"""
-    suitable_aspects = []
-    print(planet_zodiacs)
-    for sign, planets in planet_zodiacs.items():
-        sign += 1
-        prioritized_planets = sorted(
-            planets,
-            key=lambda planet: zodiac_planet_association[sign].index(planet)
-            if planet in zodiac_planet_association[sign] else len(zodiac_planet_association[sign])
-        )
-
-        primary_planet = prioritized_planets[0]
-        planet_aspects = [aspect for aspect in aspects if primary_planet in aspect[:2]]
-
-        if planet_aspects:
-            prioritized_aspects = sorted(
-                planet_aspects,
-                key=lambda aspect: zodiac_planet_association[sign].index(
-                    aspect[1] if aspect[0] == primary_planet else aspect[0])
-                if (aspect[1] if aspect[0] == primary_planet else aspect[0]) in zodiac_planet_association[sign]
-                else len(zodiac_planet_association[sign])
-            )
-            best_aspect = prioritized_aspects[0][2]
-        else:
-            best_aspect = 0
-
-        house = planet_houses[primary_planet]
-        suitable_aspects.append({"zodiac": sign, "planet": primary_planet, "house": house, "aspect": best_aspect})
-
-    return suitable_aspects
-
-
 def calculate_house_shift():
     ascendant = calculate_ascendant()
     shift = ascendant % 360
@@ -295,32 +255,6 @@ def get_matched_zodiac_planets(zodiac_planets: dict, zodiac_planet_association: 
         new_zodiac_planets[sign] = primary_planet
 
     return new_zodiac_planets
-
-
-def document_prediction(year, month, day, horoscope_data, prediction_type) -> str:
-    if prediction_type == 1: # daily
-        folder_path = os.path.join(MEDIA_DIR, f"horoscope/daily/{year}/{month}")
-        file_path = os.path.join(folder_path, f"{day}.json")
-    elif prediction_type == 2: # weekly
-        week_of_month = (day - 1) // 7 + 1
-        folder_path = os.path.join(MEDIA_DIR, f"horoscope/weekly/{year}/{month}")
-        file_path = os.path.join(folder_path, f"{week_of_month}.json")
-    elif prediction_type == 3: # monthly
-        folder_path = os.path.join(MEDIA_DIR, f"horoscope/monthly/{year}")
-        file_path = os.path.join(folder_path, f"{month}.json")
-    elif prediction_type == 4: # annual
-        folder_path = os.path.join(MEDIA_DIR, f"horoscope/annual")
-        file_path = os.path.join(folder_path, f"{year}.json")
-    else:
-        raise Exception('later improve')
-
-    if not os.path.exists(folder_path): # create folder
-        os.makedirs(folder_path)
-
-    with open(file_path, 'w') as json_file: # create json file
-        json.dump(horoscope_data, json_file, indent=2, ensure_ascii=False)
-
-    return file_path
 
 
 """ ! оптимизировать только после того как сделаю тесты для критических функций

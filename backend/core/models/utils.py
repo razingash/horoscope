@@ -74,6 +74,7 @@ class MoonEventsChoices(int, Enum):
     BLUE_MOON = 1
     MICROMOON = 2
     SUPERMOON = 3
+    WOLFMOON = 4
 
 
 class MoonPhasesChoices(int, Enum):
