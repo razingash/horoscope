@@ -48,7 +48,7 @@ class HoroscopeCompleteBase(Base):
     language: Mapped[LanguagesChoices] = mapped_column(Enum(LanguagesChoices), nullable=False, index=True)
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
     zodiac: Mapped[ZodiacsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
-    year: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+    year: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True) # возможно стоит убрать индекс
 
     __abstract__ = True
     __table_args__ = (

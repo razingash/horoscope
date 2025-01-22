@@ -1,57 +1,124 @@
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone
 
 from skyfield.api import load
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from horoscope.utils import get_season, get_current_lunar_phase
-from services.horoscope.prediction import generate_horoscope
-
+from commands.postinitialization import get_daily_horoscope_descriptions, get_weekly_horoscope_descriptions, \
+    get_monthly_horoscope_descriptions, get_annual_horoscope_descriptions
+from core.models import HoroscopeDaily, LanguagesChoices, HoroscopeWeekly, HoroscopeMonthly, ZodiacsChoices, \
+    HoroscopeTypes, HoroscopeAnnual
+from horoscope.utils import get_season
+from services.horoscope.prediction import get_week_number, generate_horoscope
 
 """! отправлять текущую дату и временную зону с фронта чтобы не быть подвязанным под сервер
 !! надо будет тогда сделать проверку, чтобы дата была в пределах +- 1, чтобы нельзя было спарсить все наперед
 """
 
-async def get_horoscope_daily(session: AsyncSession): # ! позже кэшировать результат
-    ts = load.timescale()
-    start_date = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
-    start_date = ts.utc(start_date)
+ts = load.timescale()
+now = datetime.now(timezone.utc)
+start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+start_date = ts.utc(start_date)
 
-    data = generate_horoscope(horoscope_type=1, start_date=start_date)
-    print(data)
-    return data
+language = LanguagesChoices.russian
+year, month, day = now.year, now.month, now.day
+
+async def get_horoscope_daily(session: AsyncSession):
+    query = await session.execute(select(HoroscopeDaily.zodiac, HoroscopeDaily.description).where(
+        HoroscopeDaily.language == language,
+        HoroscopeDaily.year == year,
+        HoroscopeDaily.month == month,
+        HoroscopeDaily.day == day,
+    ))
+    rows = query.fetchall()
+
+    if not rows:
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.DAILY, start_date=start_date)
+
+        horoscope_descriptions = await get_daily_horoscope_descriptions(session, data)
+        await save_horoscope_data(session, HoroscopeDaily, horoscope_descriptions, day=day, month=month, year=year)
+
+        horoscope_data = horoscope_descriptions[language]
+    else:
+        horoscope_data = {zodiac: description for zodiac, description in rows}
+
+    return horoscope_data
 
 
 async def get_horoscope_weekly(session: AsyncSession):
-    ts = load.timescale()
-    now = datetime.now()
-    year, month, day = now.year, now.month, now.day
+    week_number = get_week_number(year, month, day)
+    query = await session.execute(select(HoroscopeWeekly.zodiac, HoroscopeWeekly.description).where(
+        HoroscopeWeekly.language == language,
+        HoroscopeWeekly.year == year,
+        HoroscopeWeekly.month == month,
+        HoroscopeWeekly.week_number == week_number,
+    ))
+    rows = query.fetchall()
 
-    start_date = ts.utc(date(year, month, 1))
+    if not rows:
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.WEEKLY, start_date=start_date)
 
-    data = generate_horoscope(horoscope_type=2, start_date=start_date)
-    lunar_phase = await get_current_lunar_phase(session, year, month, day)
+        horoscope_descriptions = await get_weekly_horoscope_descriptions(session, choosen_date=now, data=data)
+        await save_horoscope_data(session, HoroscopeWeekly, horoscope_descriptions,
+                                  week_number=week_number, month=month, year=year)
 
-    return {'lunar phase': lunar_phase, 'data': data} # change return
+        horoscope_data = horoscope_descriptions[language]
+    else:
+        horoscope_data = {zodiac: description for zodiac, description in rows}
+
+    return horoscope_data
 
 
 async def get_horoscope_monthly(session: AsyncSession):
-    ts = load.timescale()
-    now = datetime.now()
-    year, month = now.year, now.month
-    start_date = ts.utc(date(year, month, 1))
+    query = await session.execute(select(HoroscopeMonthly.zodiac, HoroscopeMonthly.description).where(
+        HoroscopeMonthly.language == language,
+        HoroscopeMonthly.year == year,
+        HoroscopeMonthly.month == month,
+    ))
+    rows = query.fetchall()
 
-    data = generate_horoscope(horoscope_type=3, start_date=start_date)
-    season = get_season(month)
+    if not rows:
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.MONTHLY, start_date=start_date)
 
-    return {'season': season, 'data': data} # change return
+        season = get_season(month=month)
+        horoscope_descriptions = await get_monthly_horoscope_descriptions(session, data=data, season=season)
+        await save_horoscope_data(session, HoroscopeMonthly, horoscope_descriptions, month=month, year=year)
+
+        horoscope_data = horoscope_descriptions[language]
+    else:
+        horoscope_data = {zodiac: description for zodiac, description in rows}
+
+    return horoscope_data
 
 
 async def get_horoscope_annual(session: AsyncSession):
-    ts = load.timescale()
-    start_date = ts.utc(date(datetime.now().year, 1, 1))
+    query = await session.execute(select(HoroscopeAnnual.zodiac, HoroscopeAnnual.description).where(
+        HoroscopeAnnual.language == language,
+        HoroscopeAnnual.year == year,
+    ))
+    rows = query.fetchall()
 
-    data = generate_horoscope(horoscope_type=4, start_date=start_date)
+    if not rows:
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.ANNUAL, start_date=start_date)
 
-    print(data)
+        horoscope_descriptions = await get_annual_horoscope_descriptions(session, data=data)
+        await save_horoscope_data(session, HoroscopeAnnual, horoscope_descriptions, year=year)
 
-    return data
+        horoscope_data = horoscope_descriptions[language]
+    else:
+        horoscope_data = {zodiac: description for zodiac, description in rows}
+
+    return horoscope_data
+
+
+async def save_horoscope_data(session, model_class, data, **kwargs):
+    """сохраняет поулченные данные для гороскопа в базу данных"""
+    for language in LanguagesChoices:
+        language = language.value
+        for zodiac in ZodiacsChoices:
+            zodiac = zodiac.value
+            description = data[language][zodiac]
+            filters = dict(language=language, zodiac=zodiac, **kwargs)
+            horoscope = model_class(description=description, **filters)
+            session.add(horoscope)
+    await session.commit()

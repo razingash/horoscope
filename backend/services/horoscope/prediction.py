@@ -2,8 +2,12 @@ import json
 import os
 from datetime import datetime, timezone
 
+from sqlalchemy import select
+
 from core.config import MEDIA_DIR
-from core.models import PlanetsChoices
+from core.models import PlanetsChoices, LanguagesChoices, HoroscopeVoidAnnual, HoroscopeFitAnnual, HoroscopeVoidMonthly, \
+    HoroscopeFitMonthly, HoroscopeFitWeekly, HoroscopeVoidWeekly, HoroscopeFitDaily, HoroscopeVoidDaily
+from horoscope.utils import get_current_lunar_phase
 from services.horoscope.natal_chart import calculate_transits_for_natal_chart
 from services.moon.services import get_moon_cycle
 
@@ -317,3 +321,166 @@ def document_prediction(year, month, day, horoscope_data, prediction_type) -> st
         json.dump(horoscope_data, json_file, indent=2, ensure_ascii=False)
 
     return file_path
+
+
+""" ! оптимизировать только после того как сделаю тесты для критических функций
+async def get_horoscope_descriptions(session, **kwargs):
+    descriptions = {language.value: {} for language in LanguagesChoices}
+    for language in LanguagesChoices:
+        for info in kwargs["data"]:
+            zodiac = info['zodiac']
+"""
+
+async def get_daily_horoscope_descriptions(session, data):
+    moon_position = data["moon_position"]
+    moon_cycle = data["moon_cycle"]
+    data = data["data"]
+
+    descriptions = {language.value: {} for language in LanguagesChoices}
+    for language in LanguagesChoices:
+        for info in data:
+            zodiac = info['zodiac']
+            planet = info.get('planet')
+
+            if planet is None:  # void
+                HoroscopeVoidDaily()
+                query = select(HoroscopeVoidDaily.description).filter(
+                    HoroscopeVoidDaily.zodiac == zodiac,
+                    HoroscopeVoidDaily.moon_position == moon_position,
+                    HoroscopeVoidDaily.moon_cycle == moon_cycle,
+                    HoroscopeVoidDaily.language == language,
+                )
+            else:  # fit
+                aspect = info["aspect"]
+                house = info['house']
+                query = select(HoroscopeFitDaily.description).filter(
+                    HoroscopeFitDaily.aspect == aspect,
+                    HoroscopeFitDaily.zodiac == zodiac,
+                    HoroscopeFitDaily.house == house,
+                    HoroscopeFitDaily.planet == planet,
+                    HoroscopeFitDaily.language == language,
+                )
+
+            result = await session.execute(query)
+            zodiac_description = result.scalars().first()
+
+            if zodiac_description:
+                descriptions[language.value][zodiac] = zodiac_description
+
+    return descriptions
+
+
+async def get_weekly_horoscope_descriptions(session, choosen_date, data):
+    year, month, day = choosen_date.year, choosen_date.month, choosen_date.day
+    lunar_phase = await get_current_lunar_phase(session, year, month, day)
+
+    descriptions = {language.value: {} for language in LanguagesChoices}
+    for language in LanguagesChoices:
+        for info in data:
+            zodiac = info['zodiac']
+            house = info['house']
+
+            planet = info.get('planet')
+
+            if planet is None: # void # lunar_phase
+                planet_position = info.get('planet_position')
+                query = select(HoroscopeVoidWeekly.description).filter(
+                    HoroscopeVoidWeekly.lunar_phase == lunar_phase,
+                    HoroscopeVoidWeekly.zodiac == zodiac,
+                    HoroscopeVoidWeekly.house == house,
+                    HoroscopeVoidWeekly.main_planet_position == planet_position,
+                    HoroscopeVoidWeekly.language == language,
+                )
+            else: # fit # lunar phase
+                query = select(HoroscopeFitWeekly.description).filter(
+                    HoroscopeFitWeekly.lunar_phase == lunar_phase,
+                    HoroscopeFitWeekly.zodiac == zodiac,
+                    HoroscopeFitWeekly.house == house,
+                    HoroscopeFitWeekly.planet == planet,
+                    HoroscopeFitWeekly.language == language,
+                )
+
+            result = await session.execute(query)
+            zodiac_description = result.scalars().first()
+
+            if zodiac_description:
+                descriptions[language.value][zodiac] = zodiac_description
+
+    return descriptions
+
+
+async def get_monthly_horoscope_descriptions(session, data, season):
+    descriptions = {language.value: {} for language in LanguagesChoices}
+    for language in LanguagesChoices:
+        for info in data:
+            zodiac = info['zodiac']
+            house = info['house']
+
+            planet = info.get('planet')
+
+            if planet is None:  # void
+                planet_position = info.get('planet_position')
+                query = select(HoroscopeVoidMonthly.description).filter(
+                    HoroscopeVoidMonthly.zodiac == zodiac,
+                    HoroscopeVoidMonthly.house == house,
+                    HoroscopeVoidMonthly.main_planet_position == planet_position,
+                    HoroscopeVoidMonthly.language == language,
+                )
+            else:  # fit
+                query = select(HoroscopeFitMonthly.description).filter(
+                    HoroscopeFitMonthly.season == season,
+                    HoroscopeFitMonthly.zodiac == zodiac,
+                    HoroscopeFitMonthly.house == house,
+                    HoroscopeFitMonthly.planet == planet,
+                    HoroscopeFitMonthly.language == language,
+                )
+
+            result = await session.execute(query)
+            zodiac_description = result.scalars().first()
+
+            if zodiac_description:
+                descriptions[language.value][zodiac] = zodiac_description
+
+    return descriptions
+
+
+async def get_annual_horoscope_descriptions(session, data):
+    descriptions = {language.value: {} for language in LanguagesChoices}
+    for language in LanguagesChoices:
+        for info in data:
+            zodiac = info['zodiac']
+            house = info['house']
+
+            planet = info.get('planet')
+
+            if planet is None:  # void
+                planet_position = info.get('planet_position')
+                query = select(HoroscopeVoidAnnual.description).filter(
+                    HoroscopeVoidAnnual.zodiac == zodiac,
+                    HoroscopeVoidAnnual.house == house,
+                    HoroscopeVoidAnnual.main_planet_position == planet_position,
+                    HoroscopeVoidAnnual.language == language,
+                )
+            else:  # fit
+                query = select(HoroscopeFitAnnual.description).filter(
+                    HoroscopeFitAnnual.zodiac == zodiac,
+                    HoroscopeFitAnnual.house == house,
+                    HoroscopeFitAnnual.planet == planet,
+                    HoroscopeFitAnnual.language == language,
+                )
+
+            result = await session.execute(query)
+            zodiac_description = result.scalars().first()
+
+            if zodiac_description:
+                descriptions[language.value][zodiac] = zodiac_description
+
+    return descriptions
+
+
+def get_week_number(year: int, month: int, day: int) -> int:
+    """returns the week number of the month"""
+    first_day_of_month = datetime(year, month, 1)
+    week_number = (day + (first_day_of_month.weekday() + 1)) // 7 + 1
+
+    return week_number
