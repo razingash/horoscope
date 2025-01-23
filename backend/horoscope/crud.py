@@ -115,7 +115,7 @@ async def get_horoscope_annual(session: AsyncSession):
 
 
 async def save_horoscope_data(session, model_class, data, **kwargs):
-    """сохраняет поулченные данные для гороскопа в базу данных"""
+    """saves the received data for the horoscope to the database"""
     for language in LanguagesChoices:
         language = language.value
         for zodiac in ZodiacsChoices:

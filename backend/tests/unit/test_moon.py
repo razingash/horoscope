@@ -1,5 +1,5 @@
 import pytz
-from datetime import datetime
+from datetime import datetime, timezone
 
 from skyfield.almanac import moon_phases
 from skyfield.api import load
@@ -7,7 +7,8 @@ from skyfield.searchlib import find_discrete
 
 from core.config import eph
 from core.models import MoonPhasesChoices
-from services.moon.services import find_moon_phases, find_blue_moons, find_supermoons_and_micromoons
+from services.moon.services import find_moon_phases, find_blue_moons, find_supermoons_and_micromoons, \
+    find_previous_new_moon, get_moon_cycle
 
 
 def test_find_moon_phases():
@@ -152,7 +153,48 @@ def test_find_supermoons_and_micromoons():
     assert len(micromoons) == len(expected_micromoons), "the number of blue moons phases doesn't coincide with the true one"
 
     for res, exp in zip(supermoons, expected_supermoons):
-        assert res[0] == exp, f"Время не совпадает: {res[0]} != {exp}"
+        assert res[0] == exp, f"Time doesn't match: {res[0]} != {exp}"
 
     for res, exp in zip(micromoons, expected_micromoons):
-        assert res[0] == exp, f"Время не совпадает: {res[0]} != {exp}"
+        assert res[0] == exp, f"Time doesn't match: {res[0]} != {exp}"
+
+
+def test_get_current_lunar_phase():
+    """this data is very accurate, with other sites the discrepancy is from 0 to 1 minute"""
+    dates = [
+        datetime(2026, 1, 1, tzinfo=timezone.utc),
+        datetime(2026, 6, 1, tzinfo=timezone.utc),
+        datetime(2025, 1, 1, tzinfo=timezone.utc),
+        datetime(2025, 6, 1, tzinfo=timezone.utc),
+        datetime(2024, 1, 1, tzinfo=timezone.utc),
+        datetime(2024, 6, 1, tzinfo=timezone.utc),
+        datetime(2023, 1, 1, tzinfo=timezone.utc),
+        datetime(2023, 6, 1, tzinfo=timezone.utc),
+    ]
+    results = [
+        datetime(2025, 12, 20, 1, 43, 20, 745460, tzinfo=timezone.utc),
+        datetime(2026, 5, 16, 20, 1, 2, 798239, tzinfo=timezone.utc),
+        datetime(2024, 12, 30, 22, 26, 47, 918900, tzinfo=timezone.utc),
+        datetime(2025, 5, 27, 3, 2, 21, 53363, tzinfo=timezone.utc),
+        datetime(2023, 12, 12, 23, 32, 2, 124987, tzinfo=timezone.utc),
+        datetime(2024, 5, 8, 3, 21, 56, 101385, tzinfo=timezone.utc),
+        datetime(2022, 12, 23, 10, 16, 52, 830677, tzinfo=timezone.utc),
+        datetime(2023, 5, 19, 15, 53, 16, 560588, tzinfo=timezone.utc)
+    ]
+
+    for date, result in zip(dates, results):
+        previous_new_moon = find_previous_new_moon(date)
+        assert previous_new_moon == result, "Results do not match the true ones"
+
+
+def test_get_moon_cycle():
+    res = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+           0, 1]
+    for index, day in enumerate(range(1, 32)):
+        moon_cycle = get_moon_cycle(datetime(2025, 1, day, tzinfo=timezone.utc))
+        assert moon_cycle == res[index], "Results do not match the true ones"
+
+    res = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+    for index, day in enumerate(range(1, 29)):
+        moon_cycle = get_moon_cycle(datetime(2025, 2, day, tzinfo=timezone.utc))
+        assert moon_cycle == res[index], "Results do not match the true ones"

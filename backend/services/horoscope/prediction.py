@@ -3,9 +3,8 @@ from sqlalchemy import select
 
 from core.models import PlanetsChoices, LanguagesChoices, HoroscopeVoidAnnual, HoroscopeFitAnnual, HoroscopeVoidMonthly, \
     HoroscopeFitMonthly, HoroscopeFitWeekly, HoroscopeVoidWeekly, HoroscopeFitDaily, HoroscopeVoidDaily
-from horoscope.utils import get_current_lunar_phase
 from services.horoscope.natal_chart import calculate_transits_for_natal_chart
-from services.moon.services import get_moon_cycle
+from services.moon.services import get_moon_cycle, get_current_lunar_phase
 
 
 def generate_horoscope(horoscope_type: int, start_date, end_date=None):
@@ -306,7 +305,7 @@ async def get_daily_horoscope_descriptions(session, data):
 
 async def get_weekly_horoscope_descriptions(session, choosen_date, data):
     year, month, day = choosen_date.year, choosen_date.month, choosen_date.day
-    lunar_phase = await get_current_lunar_phase(session, year, month, day)
+    lunar_phase = get_current_lunar_phase(year, month, day)
 
     descriptions = {language.value: {} for language in LanguagesChoices}
     for language in LanguagesChoices:

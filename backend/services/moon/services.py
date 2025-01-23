@@ -111,6 +111,7 @@ def find_supermoons_and_micromoons(phases):
 
 
 def find_previous_new_moon(choosed_time: datetime) -> datetime:
+    """finds the past new moon in UTC"""
     ts = load.timescale()
 
     t0 = ts.utc(choosed_time.year, choosed_time.month, choosed_time.day - 30)
@@ -133,3 +134,16 @@ def get_moon_cycle(choosed_time: datetime) -> int:
 
     return current_day
 
+
+def get_current_lunar_phase(year: int, month: int, day: int) -> int:
+    """gets the current lunar phase"""
+    lunar_phases = get_moon_phases(year, month)
+
+    target_date = datetime(year, month, day)
+
+    for item in lunar_phases:
+        item['datetime'] = datetime.strptime(item['datetime'], '%Y-%m-%d %H:%M:%S')
+
+    closest_event = min(lunar_phases, key=lambda x: abs(x['datetime'] - target_date))['phase']
+
+    return closest_event

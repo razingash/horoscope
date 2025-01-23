@@ -12,6 +12,7 @@ from services.moon.services import get_moon_phases
 """
 
 async def get_moon_phases_with_events(session: AsyncSession, year: int, month: int):
+    # найти нормальный способ убрать лишние поля из этого запроса
     query = await session.execute(select(MoonPhases).join(MoonEventsSchedule).filter(
         MoonEventsSchedule.year == year, MoonEventsSchedule.month == month
     ).options(selectinload(MoonPhases.events)))
