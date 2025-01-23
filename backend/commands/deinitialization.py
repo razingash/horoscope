@@ -26,5 +26,3 @@ def command_deinitialization():
             print(Style.BRIGHT + Fore.GREEN + "deinitialization completed")
     else:
         print(Fore.RED + "Database doesn't exists")
-
-

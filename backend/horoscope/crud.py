@@ -4,12 +4,11 @@ from skyfield.api import load
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from commands.postinitialization import get_daily_horoscope_descriptions, get_weekly_horoscope_descriptions, \
-    get_monthly_horoscope_descriptions, get_annual_horoscope_descriptions
 from core.models import HoroscopeDaily, LanguagesChoices, HoroscopeWeekly, HoroscopeMonthly, ZodiacsChoices, \
     HoroscopeTypes, HoroscopeAnnual
 from horoscope.utils import get_season
-from services.horoscope.prediction import get_week_number, generate_horoscope
+from services.horoscope.prediction import get_week_number, generate_horoscope, get_daily_horoscope_descriptions, \
+    get_weekly_horoscope_descriptions, get_monthly_horoscope_descriptions, get_annual_horoscope_descriptions
 
 """
 кэшировать апи для этого проиложения на уровне Nginx используя json и временные зоны

@@ -24,7 +24,7 @@ class MoonEventsSchedule(Base): # in UTC
 
 
 class MoonPhases(Base):
-    phase: Mapped[MoonPhasesChoices] = mapped_column(Enum(MoonPhasesChoices), nullable=False, index=True)
+    phase: Mapped[MoonPhasesChoices] = mapped_column(SmallInteger, nullable=False, index=True)
     date: Mapped[str] = mapped_column(DateTime, nullable=False, index=True)
     schedule_id: Mapped[int] = mapped_column(ForeignKey("moon_events_schedule.id"), nullable=False)
 
@@ -38,7 +38,7 @@ class MoonPhases(Base):
 
 
 class MoonEvents(Base):
-    event: Mapped[MoonPhasesChoices] = mapped_column(Enum(MoonPhasesChoices), nullable=False, index=True)
+    event: Mapped[MoonPhasesChoices] = mapped_column(SmallInteger, nullable=False, index=True)
     phase: Mapped["MoonPhases"] = relationship("MoonPhases", back_populates="events")
     phase_id: Mapped[int] = mapped_column(ForeignKey("moon_phases.id"), nullable=False)
 
@@ -46,7 +46,7 @@ class MoonEvents(Base):
 
 
 class MoonEventDescription(Base):
-    event: Mapped[MoonEventsChoices] = mapped_column(Enum(MoonEventsChoices), nullable=False, index=True)
+    event: Mapped[MoonEventsChoices] = mapped_column(SmallInteger, nullable=False, index=True)
     language: Mapped[LanguagesChoices] = mapped_column(Enum(LanguagesChoices), nullable=False, index=True)
     description: Mapped[str] = mapped_column(String(500), nullable=False)
 
