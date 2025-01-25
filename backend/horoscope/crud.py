@@ -1,6 +1,3 @@
-from datetime import datetime, timezone
-
-from skyfield.api import load
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,19 +10,10 @@ from services.horoscope.prediction import get_week_number, generate_horoscope, g
 """
 кэшировать апи для этого проиложения на уровне Nginx используя json и временные зоны
 """
-"""! отправлять текущую дату и временную зону с фронта чтобы не быть подвязанным под сервер
-!! надо будет тогда сделать проверку, чтобы дата была в пределах +- 1, чтобы нельзя было спарсить все наперед
-"""
 
-ts = load.timescale()
-now = datetime.now(timezone.utc)
-start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
-start_date = ts.utc(start_date)
+async def get_horoscope_daily(session: AsyncSession, date, language):
+    year, month, day = date.year, date.month, date.day
 
-language = LanguagesChoices.russian
-year, month, day = now.year, now.month, now.day
-
-async def get_horoscope_daily(session: AsyncSession):
     query = await session.execute(select(HoroscopeDaily.zodiac, HoroscopeDaily.description).where(
         HoroscopeDaily.language == language,
         HoroscopeDaily.year == year,
@@ -35,7 +23,7 @@ async def get_horoscope_daily(session: AsyncSession):
     rows = query.fetchall()
 
     if not rows:
-        data = generate_horoscope(horoscope_type=HoroscopeTypes.DAILY, start_date=start_date)
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.DAILY, start_date=date)
 
         horoscope_descriptions = await get_daily_horoscope_descriptions(session, data)
         await save_horoscope_data(session, HoroscopeDaily, horoscope_descriptions, day=day, month=month, year=year)
@@ -47,7 +35,9 @@ async def get_horoscope_daily(session: AsyncSession):
     return horoscope_data
 
 
-async def get_horoscope_weekly(session: AsyncSession):
+async def get_horoscope_weekly(session: AsyncSession, date, language):
+    year, month, day = date.year, date.month, date.day
+
     week_number = get_week_number(year, month, day)
     query = await session.execute(select(HoroscopeWeekly.zodiac, HoroscopeWeekly.description).where(
         HoroscopeWeekly.language == language,
@@ -58,9 +48,9 @@ async def get_horoscope_weekly(session: AsyncSession):
     rows = query.fetchall()
 
     if not rows:
-        data = generate_horoscope(horoscope_type=HoroscopeTypes.WEEKLY, start_date=start_date)
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.WEEKLY, start_date=date)
 
-        horoscope_descriptions = await get_weekly_horoscope_descriptions(session, choosen_date=now, data=data)
+        horoscope_descriptions = await get_weekly_horoscope_descriptions(session, choosen_date=date, data=data)
         await save_horoscope_data(session, HoroscopeWeekly, horoscope_descriptions,
                                   week_number=week_number, month=month, year=year)
 
@@ -71,7 +61,9 @@ async def get_horoscope_weekly(session: AsyncSession):
     return horoscope_data
 
 
-async def get_horoscope_monthly(session: AsyncSession):
+async def get_horoscope_monthly(session: AsyncSession, date, language):
+    year, month = date.year, date.month
+
     query = await session.execute(select(HoroscopeMonthly.zodiac, HoroscopeMonthly.description).where(
         HoroscopeMonthly.language == language,
         HoroscopeMonthly.year == year,
@@ -80,7 +72,7 @@ async def get_horoscope_monthly(session: AsyncSession):
     rows = query.fetchall()
 
     if not rows:
-        data = generate_horoscope(horoscope_type=HoroscopeTypes.MONTHLY, start_date=start_date)
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.MONTHLY, start_date=date)
 
         season = get_season(month=month)
         horoscope_descriptions = await get_monthly_horoscope_descriptions(session, data=data, season=season)
@@ -93,7 +85,9 @@ async def get_horoscope_monthly(session: AsyncSession):
     return horoscope_data
 
 
-async def get_horoscope_annual(session: AsyncSession):
+async def get_horoscope_annual(session: AsyncSession, date, language):
+    year = date.year
+
     query = await session.execute(select(HoroscopeAnnual.zodiac, HoroscopeAnnual.description).where(
         HoroscopeAnnual.language == language,
         HoroscopeAnnual.year == year,
@@ -101,7 +95,7 @@ async def get_horoscope_annual(session: AsyncSession):
     rows = query.fetchall()
 
     if not rows:
-        data = generate_horoscope(horoscope_type=HoroscopeTypes.ANNUAL, start_date=start_date)
+        data = generate_horoscope(horoscope_type=HoroscopeTypes.ANNUAL, start_date=date)
 
         horoscope_descriptions = await get_annual_horoscope_descriptions(session, data=data)
         await save_horoscope_data(session, HoroscopeAnnual, horoscope_descriptions, year=year)

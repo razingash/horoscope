@@ -1,25 +1,57 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './../styles/horoscope.css'
+import {useFetching} from "../hooks/useFetching";
+import HoroscopeService from "../API/HoroscopeService";
+import {useStore} from "../utils/store";
 
-const Horoscope = () => {
-    const [zodiacs, setZodiacs] = useState([...Array(12).keys()]);
+const Horoscope = ({type}) => {
+    const {language} = useStore();
+    const [zodiacs, setZodiacs] = useState({});
+    const [fetchHoroscope, isHoroscopeLoading, horoscopeError] = useFetching(async() => {
+        return await fetchHoroscopeByType();
+    }, 0, 1000)
+
+    const fetchHoroscopeByType = async () => {
+        const date = new Date();
+        // eslint-disable-next-line default-case
+        switch (type) {
+            case 1: //daily
+                return await HoroscopeService.getDailyHoroscope(date, language);
+            case 2:
+                return await HoroscopeService.getWeeklyHoroscope(date, language);
+            case 3:
+                return await HoroscopeService.getMonthlyHoroscope(date, language);
+            case 4:
+                return await HoroscopeService.getAnnualHoroscope(date, language);
+        }
+    }
+
+    useEffect(() => {
+        const loadData = async () => {
+            if (!isHoroscopeLoading && !horoscopeError) {
+                const data = await fetchHoroscope();
+                data && setZodiacs(data);
+            }
+        }
+        void loadData();
+    }, [isHoroscopeLoading, horoscopeError])
 
 
     return (
         <div className={"section__main"}>
             <h1>Daily horoscope</h1>
             <div className={"area__horoscope"}>
-                {zodiacs.map(zodiac => (
-                    <div className={"field__prediction"} key={zodiac}>
+                {Object.entries(zodiacs).length > 0 ? (Object.entries(zodiacs).map(([zodiac, description]) => (
+                    <div className="field__prediction" key={zodiac}>
                         <hr />
-                        <svg className={"svg__zodiac"}>
-                            <use xlinkHref={`#zodiac_${zodiac + 1}`}></use>
+                        <svg className="svg__zodiac">
+                            <use xlinkHref={`#zodiac_${zodiac}`} />
                         </svg>
-                        <div className={"container__prediction"}>
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu
-                        </div>
+                        <div className="container__prediction">{description}</div>
                     </div>
-                ))}
+                ))) : (
+                    <div>Loading...</div>
+                )}
             </div>
         </div>
     );

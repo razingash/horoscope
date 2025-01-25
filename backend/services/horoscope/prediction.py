@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+
+from skyfield.api import load
 from sqlalchemy import select
 
 from core.models import PlanetsChoices, LanguagesChoices, HoroscopeVoidAnnual, HoroscopeFitAnnual, HoroscopeVoidMonthly, \
@@ -23,6 +25,8 @@ def generate_horoscope(horoscope_type: int, start_date, end_date=None):
         [8, 7, 2, 3],  # Aquarius ['Uranus', 'Saturn', 'Mercury', 'Venus']
         [9, 6, 3, 4]   # Pisces ['Neptune', 'Jupiter', 'Venus', 'Moon']
     ]
+    ts = load.timescale()
+    start_date = ts.utc(start_date)
 
     if end_date is None:
         end_date = start_date

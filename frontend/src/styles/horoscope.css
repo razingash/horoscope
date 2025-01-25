@@ -10,5 +10,6 @@
 }
 
 .container__prediction {
-
+    display: flex;
+    align-items: center;
 }
