@@ -1,0 +1,9 @@
+/*важность на уровне index.css, только тут стили отвечают за универсальные маленькие конструкции*/
+
+tr {
+    text-align: left;
+}
+th {
+    font: initial;
+    padding-right: 10px;
+}

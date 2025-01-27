@@ -7,9 +7,9 @@ from moon.schemas import MoonPhasesResponse
 
 router = APIRouter()
 
-@router.get(path="/lunar-forecast/{year}/{month}")#, response_model=MoonPhasesResponse) # for current location (permalink)
-async def get_moon_info_by_timezone(year: int, month: int, session: AsyncSession = Depends(db_session.session_dependency)):
+@router.get(path="/lunar-forecast/{year}/")#, response_model=MoonPhasesResponse) # for current location (permalink)
+async def get_moon_info_by_timezone(year: int, session: AsyncSession = Depends(db_session.session_dependency)):
     """now timezone is UTC"""
-    phases = await get_moon_phases_with_events(session=session, year=year, month=month)
+    phases = await get_moon_phases_with_events(session=session, year=year)
     return phases
 

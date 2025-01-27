@@ -18,7 +18,7 @@
 .calendar__header__item {
     display: flex;
     justify-content: center;
-    width: calc(100% / 7);
+    width: calc(100% / 4);
     border: 1px solid #fff;
 }
 
@@ -26,7 +26,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: calc(100% / 7);
+    width: calc(100% / 4);
     border: 1px solid #fff;
     min-height: 2em;
 }
@@ -46,7 +46,8 @@
 
 
 .field__moon__illumination {
-
+    display: flex;
+    margin-bottom: 25px;
 }
 .moon_shadow {
 
@@ -54,7 +55,15 @@
 .svg__moon {
     width: 100%;
     height: 150px;
+    max-width: 150px;
 }
 #moon-shadow {
     fill: #00000099
+}
+
+.field__moon__description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin-left: 30px;
 }

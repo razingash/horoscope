@@ -6,9 +6,9 @@ __all__ = [
 ]
 
 class LanguagesChoices(str, Enum):
-    russian = "ru"
-    english = "en"
-    polish = "pl"
+    RUSSIAN = "ru"
+    ENGLISH = "en"
+    POLISH = "pl"
 
 
 class HoroscopeTypes(int, Enum):
@@ -79,9 +79,13 @@ class MoonEventsChoices(int, Enum):
 
 class MoonPhasesChoices(int, Enum):
     NEW_MOON = 1
-    FIRST_QUARTER = 2
-    FULL_MOON = 3
-    THIRD_QUARTER = 4
+    WAXING_CRESCENT = 2
+    FIRST_QUARTER = 3
+    WAXING_GIBBOUS = 4
+    FULL_MOON = 5
+    WANING_GIBBOUS = 6
+    THIRD_QUARTER = 7
+    WANING_CRESCENT = 8
 
 
 class EarthSeasons(int, Enum):

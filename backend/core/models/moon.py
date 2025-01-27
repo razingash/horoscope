@@ -1,4 +1,4 @@
-from sqlalchemy import String, Enum, SmallInteger, UniqueConstraint, DateTime, ForeignKey
+from sqlalchemy import String, Enum, SmallInteger, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models.utils import MoonEventsChoices, LanguagesChoices, MoonPhasesChoices
@@ -10,14 +10,9 @@ __all__ = [
 """из-за мультиязычности создать декодеры на фронте не получится"""
 
 class MoonEventsSchedule(Base): # in UTC
-    year: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
-    month: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True)
+    year: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True, unique=True)
 
     __tablename__ = "moon_events_schedule"
-    __table_args__ = (
-        UniqueConstraint('year', 'month', name='idx_year_month'),
-    )
-
     moon_phases: Mapped[list["MoonPhases"]] = relationship(
         "MoonPhases", back_populates="schedule", cascade="all, delete-orphan"
     )

@@ -1,8 +1,8 @@
 import apiClient from "../utils/constants";
 
 export default class LunarService {
-    static async getMoonInfoByTimezone(year, month) { /*now timezone is UTC*/
-        const response = await apiClient.get(`/lunar-forecast/${year}/${month}`)
+    static async getMoonInfoByTimezone(year) { /*now timezone is UTC*/
+        const response = await apiClient.get(`/moon/lunar-forecast/${year}/`)
         return response.data
     }
 }

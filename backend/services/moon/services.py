@@ -10,13 +10,15 @@ from core.config import eph
 from core.models import MoonPhasesChoices, MoonEventsChoices
 
 
-def get_moon_phases(year: int, month: int, timezone=None) -> list:
+def get_moon_phases(year: int, start_month: int, end_month: int = 0, timezone=None) -> list:
     phases = moon_phases(eph)
     ts = load.timescale()
+    if end_month == 0:
+        end_month = start_month
 
-    last_day_of_month = calendar.monthrange(year, month)[1]
-    t_start = ts.utc(year, month, 1)
-    t_end = ts.utc(year, month, last_day_of_month)
+    last_day_of_month = calendar.monthrange(year, start_month)[1]
+    t_start = ts.utc(year, start_month, 1)
+    t_end = ts.utc(year, end_month, last_day_of_month)
 
     times, phase_names = find_discrete(t_start, t_end, phases)
 

@@ -9,8 +9,8 @@ from services.moon.services import get_moon_phases
 """
 тут как кэшировать пока не уверен
 """
-
-async def get_moon_phases_with_events(session: AsyncSession, year: int, month: int):
+# привести запросы к общему виду(тяжкость бытия)
+async def get_moon_phases_with_events(session: AsyncSession, year: int):
     raw_query = text("""
         SELECT 
             strftime('%Y-%m-%d %H:%M:%S', mp.date) AS "datetime",
@@ -25,21 +25,20 @@ async def get_moon_phases_with_events(session: AsyncSession, year: int, month: i
             moon_events me ON mp.id = me.phase_id
         WHERE 
             strftime('%Y', mp.date) = :year
-            AND strftime('%m', mp.date) = :month
         GROUP BY 
             mp.id, mp.date, mp.phase
         ORDER BY 
             mp.date;
     """)
 
-    params = {"year": str(year), "month": f"{month:02}"}
+    params = {"year": str(year)}
     result = await session.execute(raw_query, params)
     moon_phases = result.mappings().all()
 
     if not moon_phases:
-        moon_phases = get_moon_phases(year=year, month=month)
+        moon_phases = get_moon_phases(year=year, start_month=1, end_month=12)
 
-        moon_event_schedule = MoonEventsSchedule(year=year, month=month)
+        moon_event_schedule = MoonEventsSchedule(year=year)
         session.add(moon_event_schedule)
         await session.flush()
         for mp in moon_phases:
