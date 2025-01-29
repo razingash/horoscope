@@ -6,6 +6,7 @@ import TimeCounter from "../components/TimeCounter";
 import {decodeMoonPhase} from "../utils/decoders";
 import {useFetching} from "../hooks/useFetching";
 import LunarService from "../API/LunarService";
+import AdditionalTables from "../components/UI/Luna/AdditionalTables";
 
 /*позже улучшить код чтобы луна расчитывалась от таймзоны
  или если будет возможность(интернет) от текущего положения*/
@@ -173,11 +174,12 @@ const MoonCalendar = () => {
                     </div>
                     {lunarPhases && lunarPhases.map((dataset, index) => (
                         <div className={"calendar__cell"} key={index}>
-                            {dataset.datetime} {decodeMoonPhase(dataset.phase)}
+                            {dataset.datetime}
                         </div>
                     ))}
                 </div>
             </div>
+            <AdditionalTables year={year} data={lunarPhases}/>
         </div>
     );
 };

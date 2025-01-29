@@ -32,6 +32,62 @@
 }
 
 
+.area__additional_tables {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    margin-bottom: 150px; /*change*/
+}
+
+.field__phase_calendar, .field__events_calendar {
+    display: flex;
+    flex-direction: column;
+}
+.new_moon, .first_quarter, .full_moon, .last_quarter {
+    border: 1px solid #fff;
+    padding: 7px;
+    border-radius: 100%;
+    margin-left: 3px;
+    margin-right: 6px;
+}
+.first_quarter {
+    background: linear-gradient(to right, #ffffff00 50%, #fff 50%);
+}
+.full_moon {
+    background: #fff;
+}
+.last_quarter {
+    background: linear-gradient(to right, #fff 50%, #ffffff00 50%);
+}
+
+.lunar_phases {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+}
+.phase_month {
+    width: 15%;
+}
+.monthly_lunar_phases {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.monthly_lunar_events {
+    display: flex;
+    flex-direction: column;
+}
+.phase__event {
+    display: flex;
+    justify-content: space-between;
+}
+.cell__phase {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 46px;
+}
 
 /*тестовые эелементы будут либо удалены либо изменены*/
 .testing__h1 {
@@ -42,6 +98,7 @@
     display: flex;
     gap: 30px;
     cursor: pointer;
+    align-items: flex-end;
 }
 
 

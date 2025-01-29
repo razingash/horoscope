@@ -102,9 +102,16 @@ body {
     flex-direction: column;
 }
 
+.default__link {
+    color: var(--text-color-2);
+    text-decoration: none;
+}
 
-.header__item:hover {
+.header__item:hover, .default__link:hover {
     color: var(--blocked-element);
+}
+.default__link:focus {
+    color: var(--test-element);
 }
 .header__item:focus {
     color: var(--clicked-element);

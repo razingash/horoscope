@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from sqlalchemy import text
@@ -34,6 +35,17 @@ async def get_moon_phases_with_events(session: AsyncSession, year: int):
     params = {"year": str(year)}
     result = await session.execute(raw_query, params)
     moon_phases = result.mappings().all()
+
+    # это костыль, который нужно убрать. Если не получится сразу получать список, то исходя из тестов скорости уже решать,
+    # оставлять тут или переносить на фронтенд
+    moon_phases = [
+        {
+            "datetime": row["datetime"],
+            "phase": row["phase"],
+            "events": json.loads(row["events"]) if row["events"] else []
+        }
+        for row in moon_phases
+    ]
 
     if not moon_phases:
         moon_phases = get_moon_phases(year=year, start_month=1, end_month=12)
