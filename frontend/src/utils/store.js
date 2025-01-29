@@ -10,23 +10,25 @@ export const useStore = () => {
 const languages = ["en", "ru", "pl"];
 
 export const StoreProvider = ({children}) => {
-    const [language, setLanguageState] = useState(localStorage.getItem("language") || "en");
-
-    useEffect(() => {
+    const [language, setLanguageState] = useState(localStorage.getItem("language"));
+    console.log('store render')
+    /*useEffect(() => {
+        // тяжеленький случай
         const userLanguage = navigator.language.slice(0, 2);
 
         setLanguage(userLanguage);
-    }, [language])
+    }, [])*/
 
-    const setLanguage = (language="en") => {
-        if (languages.includes(language)) {
-            localStorage.setItem("language", language)
-            setLanguageState(language);
+    const setLanguage = (newLanguage="en") => {
+        if (languages.includes(newLanguage)) {
+            localStorage.setItem("language", newLanguage)
+            setLanguageState(newLanguage);
+            document.documentElement.lang = newLanguage;
         } else {
             localStorage.setItem("language", "en")
             setLanguageState("en");
+            document.documentElement.lang = "en";
         }
-        document.documentElement.lang = language;
     }
     const setPushNotifications = (notifications=false) => {
         /*сделать доступным только в PWA*/
@@ -37,7 +39,7 @@ export const StoreProvider = ({children}) => {
 
     return (
         <StoreContext.Provider
-            value={{language, setPushNotifications, setZodiac}}>
+            value={{language, setLanguage, setPushNotifications, setZodiac}}>
             {children}
         </StoreContext.Provider>
     )

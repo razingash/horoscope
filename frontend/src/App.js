@@ -9,14 +9,14 @@ function App() {
     //пофиг на то что спустя пару милисекунд оно меняется на нужное
     //поэтому нужно найти способ(кроме серверного рендеринга) чтобы обойти эту проблему
     // способ найден - настроить вебпак чтобы собирал все возможные вариации, но тут надо будет деда подключать чтобы удобно это делать
-  return (
-    <StoreProvider>
-      <BrowserRouter>
-        <Header/>
-        <AppRouter/>
-      </BrowserRouter>
-    </StoreProvider>
-  );
+    return (
+        <StoreProvider>
+            <BrowserRouter>
+                <Header />
+                <AppRouter />
+            </BrowserRouter>
+        </StoreProvider>
+    );
 }
 
 export default App;
