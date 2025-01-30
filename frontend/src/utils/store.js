@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useState} from "react";
 
 
 export const StoreContext = createContext(null);
@@ -11,13 +11,7 @@ const languages = ["en", "ru", "pl"];
 
 export const StoreProvider = ({children}) => {
     const [language, setLanguageState] = useState(localStorage.getItem("language"));
-    console.log('store render')
-    /*useEffect(() => {
-        // тяжеленький случай
-        const userLanguage = navigator.language.slice(0, 2);
-
-        setLanguage(userLanguage);
-    }, [])*/
+    const [languageChangedByHeader, setLanguageChangedByHeader] = useState(false);
 
     const setLanguage = (newLanguage="en") => {
         if (languages.includes(newLanguage)) {
@@ -29,6 +23,7 @@ export const StoreProvider = ({children}) => {
             setLanguageState("en");
             document.documentElement.lang = "en";
         }
+        setLanguageChangedByHeader(true);
     }
     const setPushNotifications = (notifications=false) => {
         /*сделать доступным только в PWA*/
@@ -37,9 +32,13 @@ export const StoreProvider = ({children}) => {
         /*сделать доступным только в PWA*/
     }
 
+    const resetLanguageChangeFlag = () => {
+        setLanguageChangedByHeader(false);
+    }
+
     return (
         <StoreContext.Provider
-            value={{language, setLanguage, setPushNotifications, setZodiac}}>
+            value={{language, setLanguage, languageChangedByHeader, resetLanguageChangeFlag, setPushNotifications, setZodiac}}>
             {children}
         </StoreContext.Provider>
     )

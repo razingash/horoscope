@@ -4,18 +4,23 @@ import {publicRotes} from "../rotes/urls";
 import {useStore} from "../utils/store";
 
 const AppRouter = () => {
-    const {language} = useStore();
+    const {language, setLanguage,  languageChangedByHeader} = useStore();
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
         const pathParts = location.pathname.split("/");
         const currentLang = pathParts[1];
-        if (currentLang !== language) {
-            const newPath = `/${language}` + location.pathname.slice(3);
-            navigate(newPath, { replace: true });
+        
+        if (currentLang !== language ) {
+            if (languageChangedByHeader === true) {
+                 const newPath = `/${language}` + location.pathname.slice(3);
+                navigate(newPath, { replace: true });
+            } else {
+                setLanguage(currentLang)
+            }
         }
-    }, [language, location, navigate]);
+    }, [language, navigate, location, languageChangedByHeader])
 
     return (
         <Routes>

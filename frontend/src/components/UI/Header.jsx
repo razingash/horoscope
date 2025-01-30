@@ -4,19 +4,16 @@ import {useStore} from "../../utils/store";
 
 const Header = () => {
     const {language, setLanguage} = useStore();
-    console.log('header render')
+
     useEffect(() => {
         if (!language) {
             const userLanguage = navigator.language.slice(0, 2);
-            console.log(language, userLanguage)
             setLanguage(userLanguage);
         }
-    }, [])
+    }, [language])
 
     const changeLanguage = (newLang) => {
-        console.log(language, newLang)
         if (language !== newLang) {
-            console.log(language, newLang)
             setLanguage(newLang);
         }
     };
