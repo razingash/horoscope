@@ -1,0 +1,18 @@
+[
+    {
+        "event_type": 1,
+        "description": "\"Niebieski Księżyc\" to rzadkie zjawisko astronomiczne, kiedy w jednym miesiącu kalendarzowym występują dwa pełnie Księżyca. Dzieje się tak z powodu niezgodności między cyklem księżycowym a kalendarzowym, ponieważ średnia długość miesiąca synodycznego wynosi około 29,5 dnia, a niektóre miesiące kalendarzowe są dłuższe. To zjawisko występuje średnio raz na 2,5 roku. Mimo nazwy Księżyc nie zmienia koloru; termin ten pochodzi od angielskiego wyrażenia \"once in a blue moon\", oznaczającego coś rzadkiego. Czasami \"Niebieskim Księżycem\" nazywa się trzecią pełnię Księżyca w sezonie, w którym występują cztery pełnie, co również jest uznawane za rzadkie zjawisko."
+    },
+    {
+        "event_type": 2,
+        "description": "Mikroksiężyc to pełnia lub nów, który występuje, gdy Księżyc znajduje się w największej odległości od Ziemi (apogeum). Ta odległość może wynosić do 405 000 km. W wyniku tego Księżyc wydaje się mniejszy i mniej jasny w porównaniu do zwykłej pełni Księżyca, co czyni go przeciwieństwem \"Superksiężyca\". Efekt ten może być zauważalny gołym okiem, szczególnie w porównaniu do zwykłej pełni Księżyca. Choć wizualne zmniejszenie nie jest znaczące, można zaobserwować lekkie zmniejszenie jasności i rozmiaru Księżyca na nocnym niebie."
+    },
+    {
+        "event_type": 3,
+        "description": "Superksiężyc to pełnia lub nów, który występuje, gdy Księżyc znajduje się w najbliższym punkcie swojej orbity względem Ziemi (perygee). W tym czasie Księżyc znajduje się w odległości poniżej 360 000 km od Ziemi, co sprawia, że wydaje się 14% większy i 30% jaśniejszy niż zwykła pełnia Księżyca. Efekt ten jest najbardziej widoczny podczas wschodu i zachodu Księżyca, kiedy wydaje się on jeszcze większy z powodu iluzji optycznej. Wpływ Superksiężyca może również wpływać na pływy morskie, zwiększając ich amplitudę z powodu silniejszego przyciągania grawitacyjnego."
+    },
+    {
+        "event_type": 4,
+        "description": "Wilcza Pełnia to nazwa pierwszej pełni Księżyca w roku. Termin ten pochodzi z dawnych tradycji europejskich, które łączyły go z okresem zimowym, kiedy głodne wilki wyły przy osadach w poszukiwaniu jedzenia. Nazwa ta wiąże się z dawnymi tradycjami i mitami, szczególnie dlatego, że w tym okresie zimy wilki często wydają głośne wycie, próbując znaleźć jedzenie. Dźwięki te mogą być słyszalne w ciszy nocy, gdy ziemia pokryta jest śniegiem i lodowatym chłodem. W dzisiejszych czasach termin ten nadal jest używany w kalendarzach księżycowych i prognozach astronomicznych. Wilcza Pełnia jest częścią serii tradycyjnych nazw pełni Księżyca używanych w różnych kulturach do oznaczania zmian sezonów i cykli przyrody."
+    }
+]

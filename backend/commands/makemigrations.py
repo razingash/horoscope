@@ -9,9 +9,7 @@ def command_makemigrations():
         alembic_cfg = Config("alembic.ini")
         command.upgrade(alembic_cfg, "head")
         command.revision(alembic_cfg, message=None, autogenerate=True)
-    except alembic.util.exc.CommandError as e:
-        #print(e)
+    except alembic.util.exc.CommandError:
         print('old migrations were found')
     else:
         print(Style.BRIGHT + Fore.GREEN + 'success')
-

@@ -48,7 +48,10 @@ async def are_migrations_applied(database_url: str) -> bool:
 
         alembic_cfg = Config(ALEMBIC_INI_PATH)
         script_dir = ScriptDirectory.from_config(alembic_cfg)
-        latest_revision = script_dir.get_heads()[0]
+        try:
+            latest_revision = script_dir.get_heads()[0]
+        except IndexError:
+            return False
 
         return applied_version == latest_revision
 

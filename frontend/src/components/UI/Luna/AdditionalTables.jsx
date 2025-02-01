@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {decodeMonth, decodeMoonEvent} from "../../../utils/decoders";
+import {decodeMonth, decodeMoonEvent} from "../../../utils/translations";
 import {Link} from "react-router-dom";
+import {useStore} from "../../../utils/store";
 
 const AdditionalTables = ({year, data}) => {
+    const {language} = useStore();
     const [fixedData, setFixedData] = useState([]);
     const getMoonPhaseClass = (phase) => {
         switch (phase) {
@@ -61,9 +63,9 @@ const AdditionalTables = ({year, data}) => {
                 <div className="monthly_lunar_events">
                     {Object.keys(fixedData).map((month) => (
                         fixedData[month].map(({day, events}) => (
-                            events.length > 0 && (
+                            Array.isArray(events) && events.length > 0 && (
                                 <div key={month-day} className="phase__event">
-                                    <Link to={"#"} className={"default__link"}>{decodeMoonEvent(events[0])}</Link>
+                                    <Link to={`/${language}/moon-events/`} className={"default__link"}>{decodeMoonEvent(events[0], language)}</Link>
                                     <div className="phase__date">{day} - {decodeMonth(parseInt(month)+1)}</div>
                                 </div>
                             )

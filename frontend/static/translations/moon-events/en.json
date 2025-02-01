@@ -1,0 +1,18 @@
+[
+    {
+        "event_type": 1,
+        "description": "The \"Blue Moon\" is a rare astronomical event when two full moons occur within one calendar month. This happens due to the mismatch between the lunar and calendar cycles, as the average length of a synodic month is about 29.5 days, while some calendar months are longer. This event occurs approximately once every 2.5 years. Despite its name, the Moon does not actually change color; the term originated from the English expression \"once in a blue moon,\" meaning something rare. Sometimes, the \"Blue Moon\" refers to the third full moon in a season that has four full moons, which is also considered a rare occurrence."
+    },
+    {
+        "event_type": 2,
+        "description": "A micromoon is a full moon or new moon that occurs when the Moon is at its furthest distance from Earth (apogee). This distance can be up to 405,000 km. As a result, the Moon appears smaller and less bright compared to a regular full moon, making it the opposite of a \"Supermoon.\" This effect may be noticeable to the naked eye, especially when compared to a regular full moon. Although the visual decrease is not significant, a slight reduction in brightness and size can be observed in the night sky."
+    },
+    {
+        "event_type": 3,
+        "description": "A supermoon is a full moon or new moon that occurs when the Moon is at its closest point to Earth (perigee). At this time, the Moon is less than 360,000 km away from Earth, making it appear 14% larger and 30% brighter than a regular full moon. This effect is most noticeable during its rise and set, when the Moon seems even larger due to an optical illusion. The influence of the Supermoon may also affect tides, enhancing their amplitude due to the increased gravitational pull."
+    },
+    {
+        "event_type": 4,
+        "description": "The Wolf Moon is the name given to the first full moon of the year. This term comes from ancient European traditions, which associated it with the winter period when hungry wolves howled near settlements in search of food. The name is connected to ancient customs and myths, particularly because, during this time of winter, wolves often emit loud howls as they search for food. These sounds can be heard in the stillness of the night when the ground is covered in snow and ice-cold. Today, this term continues to be used in lunar calendars and astronomical forecasts. The Wolf Moon is part of a series of traditional full moon names used in various cultures to denote changes in seasons and natural cycles."
+    }
+]

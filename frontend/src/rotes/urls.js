@@ -1,6 +1,7 @@
 import MoonCalendar from "../pages/MoonCalendar";
 import Main from "../pages/Main";
 import Horoscope from "../pages/Horoscope";
+import MoonEventsDescription from "../pages/MoonEventsDescription";
 
 
 export const publicRotes = [
@@ -14,6 +15,7 @@ export const publicRotes = [
     {path: "/horoscope/monthly/", component: <Horoscope type={3}/>, key: "horoscope-monthly"},
     {path: "/horoscope/annual/", component: <Horoscope type={4}/>, key: "horoscope-annual"},
     {path: "/moon/calendar/", component: <MoonCalendar/>, key: "moon-calendar"},
+    {path: "/moon-events/", component: <MoonEventsDescription/>, key: "moon-eventss"},
     /*{path: "/solar-system/", component: <Main/>, key: "solar-system-now"},*/
     /*добавить url для настройки работы PWA (должен быть доступен только в PWA?)*/
 ]

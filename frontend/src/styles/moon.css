@@ -125,3 +125,23 @@
     justify-content: space-evenly;
     margin-left: 30px;
 }
+
+.event__header {
+    margin-bottom: 3px;
+    font-family: sans-serif;
+    font-weight: 800;
+}
+
+.area__events_description {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.event__spacing {
+    display: flex;
+    width: 100%;
+    height: 1px;
+    margin-bottom: 12px;
+    background: linear-gradient(to left, rgba(255, 99, 71, 0) 0%, rgb(27 198 255) 50%, rgba(255, 99, 71, 0) 100%);
+}

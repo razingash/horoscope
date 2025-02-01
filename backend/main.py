@@ -1,5 +1,4 @@
-import asyncio
-import sys
+import argparse
 from contextlib import asynccontextmanager
 
 import uvicorn
@@ -18,12 +17,17 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(moon_router, prefix="/moon")
-app.include_router(horoscope_router, prefix='/horoscope')
+app.include_router(moon_router, prefix="/api/moon")
+app.include_router(horoscope_router, prefix='/api/horoscope')
 
 add_cors_middleware(app)
 
 if __name__ == "__main__":
-    if sys.platform == 'win32':
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-    uvicorn.run("main:app", reload=True)
+    parser = argparse.ArgumentParser(description="Run FastAPI server")
+    parser.add_argument("--addr", type=str, default="127.0.0.1:8000", help="Host and port to bind, e.g. 0.0.0.0:8000")
+    args = parser.parse_args()
+
+    host, port = args.addr.split(":")
+    port = int(port)
+
+    uvicorn.run("main:app", host=host, port=port, reload=True)

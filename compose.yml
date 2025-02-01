@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  nginx: # with compiled react
+    build: ./frontend
+    container_name: horoscope_fronted
+    ports:
+      - "80:80"
+    environment: # instead of 192.168.1.25 write your local IPV4 address, if you want to load website on other devices
+      - REACT_APP_BASE_URL=http://horoscope_fastapi:8080/api/
+    #  #- REACT_APP_BASE_URL=http://192.168.1.25:80/api/v1
+    command: >
+      /bin/sh -c "
+      if [ ! -f /etc/nginx/ssl/nginx.key ]; then
+        mkdir -p /etc/nginx/ssl && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -subj '/CN=localhost';
+      fi &&
+      nginx -g 'daemon off;'"
+    restart: unless-stopped
+    networks:
+      - localnet
+
+  fastapi:
+    build:
+      context: ./backend
+    container_name: horoscope_fastapi
+    ports:
+      - "8080:8080"
+    command: >
+      sh -c "python manage.py initialization && python main.py --addr 0.0.0.0:8080"
+    restart: unless-stopped
+    networks:
+      - localnet
+
+networks:
+  internet:
+    name: internet
+    driver: bridge
+  localnet:
+    name: localnet
+    driver: bridge

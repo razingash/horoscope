@@ -3,15 +3,17 @@ import './../styles/moon.css'
 import './../styles/core.css'
 import {calculateMoonIlluminationPercent, generateShadowPath} from "../utils/luna";
 import TimeCounter from "../components/TimeCounter";
-import {decodeMoonPhase} from "../utils/decoders";
+import {decodeMoonPhase} from "../utils/translations";
 import {useFetching} from "../hooks/useFetching";
 import LunarService from "../API/LunarService";
 import AdditionalTables from "../components/UI/Luna/AdditionalTables";
+import {useStore} from "../utils/store";
 
 /*позже улучшить код чтобы луна расчитывалась от таймзоны
  или если будет возможность(интернет) от текущего положения*/
 /*в офлайн режим PWA нужно будет добавить вычисление лунных фаз для UTC(из минусов - некоторые ивенты будут недоступны)*/
 const MoonCalendar = () => {
+    const {language} = useStore();
     const [year, setYear] = useState(null);
     const [currentDate, setCurrentDate] = useState(null);
     const [shadowPath, setShadowPath] = useState(null);
@@ -143,15 +145,15 @@ const MoonCalendar = () => {
                             </tr>
                             <tr>
                                 <th>Phase Type:</th>
-                                <td>{decodeMoonPhase(lunarPhase)}</td>
+                                <td>{decodeMoonPhase(lunarPhase, language)}</td>
                             </tr>
                             <tr>
                                 <th>Next Phase:</th>
-                                <td>{decodeMoonPhase(nextLunarPhase)}</td>
+                                <td>{decodeMoonPhase(nextLunarPhase, language)}</td>
                             </tr>
                             <tr>
                                 <th>Previous Phase:</th>
-                                <td>{decodeMoonPhase(prevLunarPhase)}</td>
+                                <td>{decodeMoonPhase(prevLunarPhase, language)}</td>
                             </tr>
                         </tbody>
                     </table>
