@@ -17,7 +17,7 @@ RUN npm run build
 FROM nginx
 
 COPY --from=build /app/build /usr/share/nginx/html
-COPY --from=build /app/static/translations /usr/share/nginx/html/locales
+COPY --from=build /app/static/translations /usr/share/nginx/html/static/js
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
