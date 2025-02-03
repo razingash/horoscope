@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, Suspense} from 'react';
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import {publicRotes} from "../rotes/urls";
 import {useStore} from "../utils/store";
 
 const AppRouter = () => {
-    const {language, setLanguage,  languageChangedByHeader} = useStore();
+    const {language, setLanguage, languageChangedByHeader} = useStore();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -23,12 +23,18 @@ const AppRouter = () => {
     }, [language, navigate, location, languageChangedByHeader])
 
     return (
-        <Routes>
-            {publicRotes.map(route =>
-                <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
-            )}
-            <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
-        </Routes>
+        <Suspense fallback={<></>}>
+            <Routes>
+                {publicRotes.map(route =>
+                    <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
+                )}
+                {languageChangedByHeader ? (
+                    <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
+                ) : (
+                    <Route path="*" element={<Navigate to={`/${language}/`} replace />} key={"redirect-to-home"} />
+                )}
+            </Routes>
+        </Suspense>
     );
 };
 
