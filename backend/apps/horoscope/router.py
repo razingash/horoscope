@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import db_session
 from core.models import LanguagesChoices
-from horoscope.crud import get_horoscope_daily, get_horoscope_annual, get_horoscope_monthly, get_horoscope_weekly
+from apps.horoscope.crud import get_horoscope_daily, get_horoscope_annual, get_horoscope_monthly, get_horoscope_weekly
 
 router = APIRouter()
 

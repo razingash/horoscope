@@ -73,7 +73,7 @@ const Header = () => {
                 <Link to={`/${language}/horoscope/daily/`} className="header__item">Horoscope</Link>
                 <Link to={`/${language}/moon/calendar/`} className="header__item">lunar calendar</Link>
                 <Link to={"#"} className={"header__item"}>natal chart</Link>
-                <Link to={`/${language}/info/`} className="header__item">something</Link>
+                <Link to={`${language}/solar-system/`} className="header__item">solar system</Link>
             </div>
             <div className="header__button__language">
                 <input id="checkbox_translate" type="checkbox"/>

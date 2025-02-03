@@ -1,0 +1,34 @@
+.area__solar_system {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.field__solar_system {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.svg__solar_system {
+
+}
+
+.spinner__stroke {
+    stroke: #ffffff30;
+    stroke-width: 1;
+    fill: none;
+}
+
+.planet__sun {
+    fill: #f19f06;
+    color: #000;
+}
+
+.planet {
+
+}
+

@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import db_session
-from moon.crud import get_moon_phases_with_events
-from moon.schemas import MoonPhasesResponse
+from apps.moon.crud import get_moon_phases_with_events
+from apps.moon.schemas import MoonPhasesResponse
 
 router = APIRouter()
 

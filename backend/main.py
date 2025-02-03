@@ -5,8 +5,10 @@ import uvicorn
 from fastapi import FastAPI
 
 from core.middleware import add_cors_middleware
-from moon.router import router as moon_router
-from horoscope.router import router as horoscope_router
+from apps.moon.router import router as moon_router
+from apps.horoscope.router import router as horoscope_router
+from apps.solar_system.router import router as ss_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -19,6 +21,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(moon_router, prefix="/api/moon")
 app.include_router(horoscope_router, prefix='/api/horoscope')
+app.include_router(ss_router, prefix="/api/solar-system")
 
 add_cors_middleware(app)
 

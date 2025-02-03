@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import HoroscopeDaily, LanguagesChoices, HoroscopeWeekly, HoroscopeMonthly, ZodiacsChoices, \
     HoroscopeTypes, HoroscopeAnnual
-from horoscope.utils import get_season
+from apps.horoscope.utils import get_season
 from services.horoscope.prediction import get_week_number, generate_horoscope, get_daily_horoscope_descriptions, \
     get_weekly_horoscope_descriptions, get_monthly_horoscope_descriptions, get_annual_horoscope_descriptions
 
