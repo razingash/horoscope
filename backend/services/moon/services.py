@@ -10,7 +10,7 @@ from core.config import eph
 from core.models import MoonPhasesChoices, MoonEventsChoices
 
 
-def get_moon_phases(year: int, start_month: int, end_month: int = 0, timezone=None) -> list:
+def get_moon_phases(year: int, start_month: int, end_month: int = 0) -> list:
     phases = moon_phases(eph)
     ts = load.timescale()
     if end_month == 0:

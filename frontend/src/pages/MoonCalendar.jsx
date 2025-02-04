@@ -9,9 +9,7 @@ import LunarService from "../API/LunarService";
 import AdditionalTables from "../components/UI/Luna/AdditionalTables";
 import {useStore} from "../utils/store";
 
-/*позже улучшить код чтобы луна расчитывалась от таймзоны
- или если будет возможность(интернет) от текущего положения*/
-/*в офлайн режим PWA нужно будет добавить вычисление лунных фаз для UTC(из минусов - некоторые ивенты будут недоступны)*/
+
 const MoonCalendar = () => {
     const {language} = useStore();
     const [year, setYear] = useState(null);
@@ -95,6 +93,7 @@ const MoonCalendar = () => {
             lunarPhases.forEach((phase) => {
                 const phaseDate = new Date(phase.datetime);
                 if (currentDate.toDateString() === phaseDate.toDateString()) {
+                    console.log(phase.phase)
                     setLunarPhase(phase.phase);
                 }
             });

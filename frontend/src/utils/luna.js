@@ -84,6 +84,6 @@ const sunPosition = (T, T2) => {
 const toJulianDay = (dt) => {
     return 367 * dt.getFullYear()
         - Math.floor((7 * (dt.getFullYear() + Math.floor((dt.getMonth() + 9) / 12))) / 4)
-        + Math.floor((275 * dt.getMonth()) / 9) + dt.getDate() + 1721013.5
+        + Math.floor((275 * (dt.getMonth() + 1)) / 9) + dt.getDate() + 1721013.5
         + (dt.getHours() + dt.getMinutes() / 60 + dt.getSeconds() / 3600) / 24;
 };

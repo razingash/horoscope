@@ -7,7 +7,7 @@ from core.models.base import Base
 __all__ = [
     'MoonEventsSchedule', 'MoonPhases', 'MoonEvents', 'MoonEventDescription'
 ]
-"""из-за мультиязычности создать декодеры на фронте не получится"""
+
 
 class MoonEventsSchedule(Base): # in UTC
     year: Mapped[int] = mapped_column(SmallInteger, nullable=False, index=True, unique=True)
