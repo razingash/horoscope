@@ -8,7 +8,7 @@ from core.models import HoroscopeDaily, HoroscopeWeekly, HoroscopeMonthly, Horos
      LanguagesChoices, ZodiacsChoices
 from asyncio import run as asyncio_run
 
-from horoscope.utils import get_season
+from apps.horoscope.utils import get_season
 from services.horoscope.natal_chart import calculate_transits_for_natal_chart
 from services.horoscope.prediction import horoscope_daily, horoscope_weekly, horoscope_monthly, \
     horoscope_annual, get_week_number, get_annual_horoscope_descriptions, get_monthly_horoscope_descriptions, \
