@@ -10,15 +10,15 @@ const SolarSystem = () => {
     })
 
     const planetsData = [
-        {num: 10, radius: 95},
-        {num: 9, radius: 85},
-        {num: 8, radius: 75},
-        {num: 7, radius: 65},
-        {num: 6, radius: 55},
-        {num: 5, radius: 45},
-        {num: 4, radius: 35}, /*могут быть казусы из-за того что в skyfield 4 это луна, а я использую 4 для земли*/
-        {num: 3, radius: 25},
-        {num: 2, radius: 15},
+        {num: 10, radius: 95, className: "pluto"},
+        {num: 9, radius: 85, className: "neptune"},
+        {num: 8, radius: 75, className: "uranus"},
+        {num: 7, radius: 65, className: "saturn"},
+        {num: 6, radius: 55, className: "jupiter"},
+        {num: 5, radius: 45, className: "mars"},
+        {num: 4, radius: 35, className: "earth"}, /*могут быть казусы из-за того что в skyfield 4 это луна, а я использую 4 для земли*/
+        {num: 3, radius: 25, className: "venus"},
+        {num: 2, radius: 15, className: "mercury"},
     ];
 
     useEffect(() => {
@@ -54,7 +54,10 @@ const SolarSystem = () => {
                         <circle className="planet__sun" cx="100" cy="100" r="7"></circle>
 
                         {planetPositions.map((planet) => (
-                            <circle key={planet.num} className={`planet`} cx={planet.x} cy={planet.y} r="3" fill="white"/>
+                            <g key={planet.num}>
+                            <circle key={planet.num} className={`planet ${planet.className}`} cx={planet.x} cy={planet.y} r="3" fill="white"/>
+                            <text x={planet.x + 5} y={planet.y} className="planet_label">{planet.className}</text>
+                            </g>
                         ))}
                     </svg>
                 </div>

@@ -29,6 +29,10 @@
     width: calc(100% / 4);
     border: 1px solid #fff;
     min-height: 2em;
+    padding: 2px;
+}
+.cell__invisible {
+    color: #ffffff00;
 }
 
 
@@ -93,19 +97,24 @@
 /*тестовые эелементы будут либо удалены либо изменены*/
 .testing__h1 {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 .testing__switching {
     display: flex;
     gap: 30px;
     cursor: pointer;
-    align-items: flex-end;
+    align-items: center;
 }
 
 
 .field__moon__illumination {
     display: flex;
     margin-bottom: 25px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 10px;
+    column-gap: 30px;
 }
 .moon_shadow {
 
@@ -114,6 +123,7 @@
     width: 100%;
     height: 150px;
     max-width: 150px;
+    min-width: 100px;
 }
 #moon-shadow {
     fill: #00000099
@@ -123,7 +133,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    margin-left: 30px;
 }
 
 .event__header {
@@ -144,4 +153,13 @@
     height: 1px;
     margin-bottom: 12px;
     background: linear-gradient(to left, rgba(255, 99, 71, 0) 0%, rgb(27 198 255) 50%, rgba(255, 99, 71, 0) 100%);
+}
+
+@media (max-width: 450px) {
+    .field__moon__illumination {
+        justify-content: center;
+    }
+    .field__moon__description {
+        flex-grow: 1;
+    }
 }

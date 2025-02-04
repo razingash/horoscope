@@ -4,6 +4,16 @@ import {useStore} from "../../utils/store";
 
 const Header = () => {
     const {language, setLanguage} = useStore();
+    const closeMenu = () => {
+        const checkbox = document.getElementById("menu__toggle");
+        document.body.style.overflow = '';
+        checkbox.checked = false;
+    };
+
+    const setHiddenLanguage = (language) => {
+        setLanguage(language)
+        closeMenu()
+    }
 
     useEffect(() => {
         if (!language) {
@@ -36,36 +46,45 @@ const Header = () => {
                             <input id="arrow__dropdown_1" type="checkbox" className="arrow__dropdown_input"/>
                             <label htmlFor="arrow__dropdown_1" className="arrow__dropdown">
                                 <div>Horoscope</div>
-                                <div className="arrow"></div>
+                                <div className="arrow_list"></div>
                             </label>
-                            <div className="dropdown__item_hidden">
-                                <div>Daily</div>
-                                <div>Weekly</div>
-                                <div>Monthly</div>
-                                <div>Annual</div>
-                            </div>
+                            <ul className="dropdown__item_hidden">
+                                <li><Link onClick={closeMenu} to={`/${language}/horoscope/daily/`} className="header__item">Daily</Link></li>
+                                <li><Link onClick={closeMenu} to={`/${language}/horoscope/weekly/`} className="header__item">Weekly</Link></li>
+                                <li><Link onClick={closeMenu} to={`/${language}/horoscope/monthly/`} className="header__item">Monthly</Link></li>
+                                <li><Link onClick={closeMenu} to={`/${language}/horoscope/annual/`} className="header__item">Annual</Link></li>
+                            </ul>
                         </div>
                         <div className="header__dropdown__item">
                             <input id="arrow__dropdown_2" type="checkbox" className="arrow__dropdown_input"/>
                             <label htmlFor="arrow__dropdown_2" className="arrow__dropdown">
                                 <div>Languages</div>
-                                <div className="arrow"></div>
+                                <div className="arrow_list"></div>
                             </label>
-                            <div className="dropdown__item_hidden">
-                                <div>English</div>
-                                <div>Polish</div>
-                                <div>Русский</div>
-                            </div>
+                            <ul className="dropdown__item_hidden">
+                                <li className={language === "en" && "choosed_lang_2"}>
+                                    <Link onClick={() => setHiddenLanguage("en")} to={() => changeLanguage("en")}
+                                      className={`language__item_2`}>English</Link>
+                                </li>
+                                <li className={language === "pl" && "choosed_lang_2"}>
+                                    <Link onClick={() => setHiddenLanguage("pl")} to={() => changeLanguage("pl")}
+                                      className={`language__item_2`}>Polski</Link>
+                                </li>
+                                <li className={language === "ru" && "choosed_lang_2"}>
+                                    <Link onClick={() => setHiddenLanguage("ru")} to={() => changeLanguage("ru")}
+                                      className={`language__item_2`}>Русский</Link>
+                                </li>
+                            </ul>
                         </div>
-                        <div className="header__dropdown__item">
-                            <div>Lunar Phases</div>
-                        </div>
-                        <div className="header__dropdown__item">
-                            <div>Solar System</div>
-                        </div>
-                        <div className="header__dropdown__item">
-                            <div>Natal Chart</div>
-                        </div>
+                        <Link onClick={closeMenu} to={`/${language}/moon/calendar/`} className="header__dropdown__item">
+                            Lunar Phases
+                        </Link>
+                        <Link onClick={closeMenu} to={`${language}/solar-system/`} className="header__dropdown__item">
+                            Solar System
+                        </Link>
+                        <Link onClick={closeMenu} to={"#"} className="header__dropdown__item">
+                            Natal Chart
+                        </Link>
                     </div>
                 </div>
             </div>

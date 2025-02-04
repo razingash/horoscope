@@ -14,8 +14,17 @@
 }
 
 .svg__solar_system {
-
+    overflow: visible;
 }
+.mercury {fill: #fffccb}
+.venus {fill: #fff08c}
+.earth {fill: #4b84ff}
+.mars {fill: #e15d5d}
+.jupiter {fill: #ffad4d}
+.saturn {fill: #fff200}
+.uranus {fill: #59ff91}
+.neptune {fill: #0064ff}
+.pluto {fill: #dcdcdc}
 
 .spinner__stroke {
     stroke: #ffffff30;
@@ -29,6 +38,13 @@
 }
 
 .planet {
-
+    transition: transform 0.5s ease-in-out;
+}
+.planet_label {
+    fill: #fff;
+    font-size: 4px;
+    font-family: Arial, sans-serif;
+    text-anchor: start;
+    user-select: none;
 }
 

@@ -175,9 +175,11 @@ const MoonCalendar = () => {
                         <div className={"calendar__header__item"}>Last Quarter</div>
                     </div>
                     {lunarPhases && lunarPhases.map((dataset, index) => (
-                        <div className={"calendar__cell"} key={index}>
-                            {dataset.datetime}
-                        </div>
+                        dataset.datetime ? (
+                            <div className={"calendar__cell"} key={index}>{dataset.datetime}</div>
+                        ) : (
+                             <div className={"calendar__cell cell__invisible"} key={index}>{'0000-00-00 00:00:00'}</div>
+                        )
                     ))}
                 </div>
             </div>

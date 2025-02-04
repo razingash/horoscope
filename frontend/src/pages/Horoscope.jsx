@@ -34,12 +34,12 @@ const Horoscope = ({type}) => {
             }
         }
         void loadData();
-    }, [isHoroscopeLoading, horoscopeError])
+    }, [type, isHoroscopeLoading, horoscopeError])
 
 
     return (
         <div className={"section__main"}>
-            <h1>Daily horoscope</h1>
+            <h1>Horoscope</h1>
             <div className={"area__horoscope"}>
                 {Object.entries(zodiacs).length > 0 ? (Object.entries(zodiacs).map(([zodiac, description]) => (
                     <div className="field__prediction" key={zodiac}>

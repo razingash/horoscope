@@ -10,7 +10,7 @@ from services.moon.services import get_moon_phases
 """
 тут как кэшировать пока не уверен
 """
-# привести запросы к общему виду(тяжкость бытия)
+
 async def get_moon_phases_with_events(session: AsyncSession, year: int):
     raw_query = text("""
         SELECT 
