@@ -62,15 +62,15 @@ const Header = () => {
                                 <div className="arrow_list"></div>
                             </label>
                             <ul className="dropdown__item_hidden">
-                                <li className={language === "en" && "choosed_lang_2"}>
+                                <li className={language === "en" ? "choosed_lang_2" : ""}>
                                     <Link onClick={() => setHiddenLanguage("en")} to={() => changeLanguage("en")}
                                       className={`language__item_2`}>English</Link>
                                 </li>
-                                <li className={language === "pl" && "choosed_lang_2"}>
+                                <li className={language === "pl" ? "choosed_lang_2" : ""}>
                                     <Link onClick={() => setHiddenLanguage("pl")} to={() => changeLanguage("pl")}
                                       className={`language__item_2`}>Polski</Link>
                                 </li>
-                                <li className={language === "ru" && "choosed_lang_2"}>
+                                <li className={language === "ru" ? "choosed_lang_2": ""}>
                                     <Link onClick={() => setHiddenLanguage("ru")} to={() => changeLanguage("ru")}
                                       className={`language__item_2`}>Русский</Link>
                                 </li>
@@ -82,16 +82,21 @@ const Header = () => {
                         <Link onClick={closeMenu} to={`${language}/solar-system/`} className="header__dropdown__item">
                             Solar System
                         </Link>
-                        <Link onClick={closeMenu} to={"#"} className="header__dropdown__item">
-                            Natal Chart
-                        </Link>
                     </div>
                 </div>
             </div>
             <div className="header__big">
-                <Link to={`/${language}/horoscope/daily/`} className="header__item">Horoscope</Link>
+                <div className={"header__item"} id={"horoscope_dropdown"}>
+                    <Link to={`/${language}/horoscope/daily/`} className="header__item">Horoscope</Link>
+                    <div className={"header__horoscope_dropdown"}>
+                        <span className={"dropdown__line"}></span>
+                        <Link to={`/${language}/horoscope/daily/`} className="header__item">daily</Link>
+                        <Link to={`/${language}/horoscope/weekly/`} className="header__item">weekly</Link>
+                        <Link to={`/${language}/horoscope/monthly/`} className="header__item">monthly</Link>
+                        <Link to={`/${language}/horoscope/annual/`} className="header__item">annual</Link>
+                    </div>
+                </div>
                 <Link to={`/${language}/moon/calendar/`} className="header__item">lunar calendar</Link>
-                <Link to={"#"} className={"header__item"}>natal chart</Link>
                 <Link to={`${language}/solar-system/`} className="header__item">solar system</Link>
             </div>
             <div className="header__button__language">

@@ -33,6 +33,7 @@
 }
 .cell__invisible {
     color: #ffffff00;
+    user-select: none;
 }
 
 
@@ -93,20 +94,6 @@
     align-items: center;
     width: 46px;
 }
-
-/*тестовые эелементы будут либо удалены либо изменены*/
-.testing__h1 {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-.testing__switching {
-    display: flex;
-    gap: 30px;
-    cursor: pointer;
-    align-items: center;
-}
-
 
 .field__moon__illumination {
     display: flex;

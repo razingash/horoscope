@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import './../styles/moon.css'
-import './../styles/core.css'
 import {calculateMoonIlluminationPercent, generateShadowPath} from "../utils/luna";
 import TimeCounter from "../components/TimeCounter";
 import {decodeMoonPhase} from "../utils/translations";
@@ -158,9 +157,9 @@ const MoonCalendar = () => {
                     </table>
                 </div>
             </div>
-            <h1 className={"testing__h1"}>
+            <h1 className={"dfw_row_jcc"}>
                 <div>Moon Calendar for {year}</div>
-                <div className={"testing__switching"}>
+                <div className={"switching"}>
                     <div onClick={handlePreviousYear}>previous</div>
                     <div onClick={handleNextYear}>next</div>
                 </div>
@@ -175,9 +174,9 @@ const MoonCalendar = () => {
                     </div>
                     {lunarPhases && lunarPhases.map((dataset, index) => (
                         dataset.datetime ? (
-                            <div className={"calendar__cell"} key={index}>{dataset.datetime}</div>
+                            <div className={"calendar__cell"} key={index}>{dataset.datetime.slice(5)}</div>
                         ) : (
-                             <div className={"calendar__cell cell__invisible"} key={index}>{'0000-00-00 00:00:00'}</div>
+                             <div className={"calendar__cell cell__invisible"} key={index}>{'00-00 00:00:00'}</div>
                         )
                     ))}
                 </div>

@@ -49,38 +49,3 @@ def calculate_transits_for_natal_chart(start_date, end_date):
         local_transits[planet_name] = local_planet_transits
 
     return local_transits
-
-
-def calculate_aspects_for_natal_chart(transits):
-    """Вычисляет аспекты между планетами."""
-    aspects = {}
-    aspect_definitions = {
-        'conjunction': (0, 8), # Соединение: 0° ± 8°
-        'opposition': (180, 8), # Оппозиция: 180° ± 8°
-        'square': (90, 8), # Квадрат: 90° ± 8°
-        'trine': (120, 8), # Тригон: 120° ± 8°
-        'sextile': (60, 6) # Секстиль: 60° ± 6°
-    }
-
-    planet_names = list(transits.keys())
-    dates = [time for time, _ in transits[planet_names[0]]]
-
-    for i, date in enumerate(dates):
-        daily_aspects = []
-        planet_positions = {planet: transits[planet][i][1] for planet in planet_names}
-
-        for j in range(len(planet_names)):
-            for k in range(j + 1, len(planet_names)):
-                planet1 = planet_names[j]
-                planet2 = planet_names[k]
-                angle = abs(planet_positions[planet1] - planet_positions[planet2]) % 360
-                angle = min(angle, 360 - angle)
-
-                for aspect_name, (ideal_angle, orb) in aspect_definitions.items():
-                    if abs(angle - ideal_angle) <= orb:
-                        daily_aspects.append((planet1, planet2, aspect_name))
-                        break
-
-        aspects[date.strftime('%Y-%m-%d')] = daily_aspects
-
-    return aspects

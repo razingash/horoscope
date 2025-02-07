@@ -12,3 +12,18 @@ th {
     display: flex;
     flex-direction: column;
 }
+
+.dfw_row_jcc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.switching {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    user-select: none;
+}
+.switching > div {
+    cursor: pointer;
+}

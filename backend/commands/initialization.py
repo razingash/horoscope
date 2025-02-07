@@ -6,8 +6,6 @@ from colorama import Fore, Style
 from alembic.config import Config
 from alembic.script import ScriptDirectory
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
 from .makemigrations import command_makemigrations
 from .migrate import command_migrate
 from core.database import db_session
@@ -39,10 +37,7 @@ def initialize():
 async def are_migrations_applied(database_url: str) -> bool:
     """checks the relevance of migrations"""
 
-    engine = create_async_engine(database_url, echo=True)
-    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-    #попробовать это  async with db_session.session_factory() as session:
-    async with async_session() as session:
+    async with db_session.session_factory() as session:
         result = await session.execute(text("SELECT version_num FROM alembic_version LIMIT 1"))
         applied_version = result.scalar()
 

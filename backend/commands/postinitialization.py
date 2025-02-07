@@ -13,6 +13,7 @@ from services.horoscope.natal_chart import calculate_transits_for_natal_chart
 from services.horoscope.prediction import horoscope_daily, horoscope_weekly, horoscope_monthly, \
     horoscope_annual, get_week_number, get_annual_horoscope_descriptions, get_monthly_horoscope_descriptions, \
     get_weekly_horoscope_descriptions, get_daily_horoscope_descriptions
+from services.solar_system.services import generate_solar_system_data
 
 
 def command_postinitialization(end_date):
@@ -25,7 +26,8 @@ async def calculate_horoscope_data(end_date) -> None:
     start_date = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
     start_date, end_date = ts.utc(start_date), ts.utc(end_date.replace(tzinfo=timezone.utc))
 
-    data = await generate_future_horoscope(start_date=start_date, end_date=end_date)
+    await generate_solar_system_data(end_date=end_date)
+    await generate_future_horoscope(start_date=start_date, end_date=end_date)
 
 
 async def generate_future_horoscope(start_date, end_date) -> bool:
