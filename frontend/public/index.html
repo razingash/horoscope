@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= language %>">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#05000d" />
-    <link rel="icon" href="/favicon.ico">
-    <!--проблема с индексацией
-    <link rel="canonical" href="https://example.com/en">-->
-    <link rel="alternate" hreflang="en" href="https://example.com/en" />
-    <link rel="alternate" hreflang="ru" href="https://example.com/ru" />
-    <link rel="alternate" hreflang="pl" href="https://example.com/pl" />
-    <title>App</title>
+    <link rel="shortcut icon" sizes="any" href="/favicon.ico">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Heavenly Way">
+    <meta name="apple-mobile-web-app-title" content="<%= title %>">
+    <meta name="msapplication-starturl" content="http://localhost/">
+    <link rel="canonical" href="<%= canonicalLink %>">
+    <% alternateLinks.forEach(link => { %>
+        <link rel="alternate" hreflang="<%= link.hreflang %>" href="<%= link.href %>" />
+    <% }); %>
+    <meta name="title" content="<%= title %>">
+    <meta name="description" content="<%= description %>" />
+    <title><%= title %></title>
   </head>
   <body>
     <!--possible optimization - remove circle and make it via html-->

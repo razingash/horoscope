@@ -16,6 +16,6 @@ export const publicRotes = [
     {path: "/horoscope/annual/", component: <Horoscope type={4}/>, key: "horoscope-annual"},
     {path: "/moon/calendar/", component: <MoonCalendar/>, key: "moon-calendar"},
     {path: "/moon-events/", component: <MoonEventsDescription/>, key: "moon-events"},
-    {path: "/solar-system/", component: <SolarSystem/>, key: "solar-system-now"}, /*main page*/
+    {path: "/solar-system/", component: <SolarSystem/>, key: "solar-system-bydate"}, /*main page*/
     /*добавить url для настройки работы PWA (должен быть доступен только в PWA?)*/
 ]
