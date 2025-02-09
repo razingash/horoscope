@@ -8,6 +8,7 @@ services:
       - "80:80"
     environment: # instead of 192.168.1.25 write your local IPV4 address, if you want to load website on other devices
       - REACT_APP_BASE_URL=http://horoscope_fastapi:8080/api/
+      - IS_PROD=true
     #  #- REACT_APP_BASE_URL=http://192.168.1.25:80/api/v1
     command: >
       /bin/sh -c "

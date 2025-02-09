@@ -171,6 +171,7 @@ const routesConfig = [
     },
 ]
 
+const isProduction = process.env.IS_PROD ? process.env.IS_PROD === "true" : false;
 
 module.exports = {
     webpack: {
@@ -179,25 +180,45 @@ module.exports = {
                 plugin => !(plugin instanceof HtmlWebpackPlugin)
             );
 
-            const htmlPlugins = routesConfig.flatMap(route =>
-                route.languages.map(langConfig => new HtmlWebpackPlugin({
-                    filename: `${langConfig.lang}${route.path === "/" ? "/index.html" : `${route.path}/index.html`}`,
-                    template: './public/index.html',
-                    templateParameters: {
-                        title: langConfig.title,
-                        description: langConfig.description,
-                        language: langConfig.lang,
-                        canonicalLink: `https://localhost${langConfig.lang === "en" ? route.path : `/${langConfig.lang}${route.path}`}`,
-                        alternateLinks: route.languages.map(l => ({
-                            hreflang: l.lang,
-                            href: `https://localhost/${l.lang}${route.path}`
-                        }))
-                    },
-                    inject: true,
-                }))
-            );
+            if (isProduction) {
+                const htmlPlugins = routesConfig.flatMap(route =>
+                    route.languages.map(langConfig => new HtmlWebpackPlugin({
+                        filename: `${langConfig.lang}${route.path === "/" ? "/index.html" : `${route.path}/index.html`}`,
+                        template: './public/index.html',
+                        templateParameters: {
+                            title: langConfig.title,
+                            description: langConfig.description,
+                            language: langConfig.lang,
+                            canonicalLink: `https://localhost${langConfig.lang === "en" ? route.path : `/${langConfig.lang}${route.path}`}`,
+                            alternateLinks: route.languages.map(l => ({
+                                hreflang: l.lang,
+                                href: `https://localhost/${l.lang}${route.path}`
+                            }))
+                        },
+                        inject: true,
+                    }))
+                );
 
-            webpackConfig.plugins.push(...htmlPlugins);
+                webpackConfig.plugins.push(...htmlPlugins);
+            } else {
+                webpackConfig.plugins.push(
+                    new HtmlWebpackPlugin({
+                        filename: 'index.html',
+                        template: './public/index.html',
+                        templateParameters: {
+                            title: "defaultTitle",
+                            description: "defaultDescription",
+                            language: "en",
+                            canonicalLink: `https://localhost/en/`,
+                            alternateLinks: [{
+                                hreflang: "en",
+                                href: `https://localhost/en/`,
+                            }],
+                        },
+                        inject: true,
+                    })
+                );
+            }
 
             return webpackConfig;
         },

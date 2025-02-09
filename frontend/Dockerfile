@@ -9,7 +9,9 @@ RUN npm install
 
 COPY . /app/
 ARG REACT_APP_BASE_URL="http://localhost:8080/api/"
-ENV REACT_APP_BASE_URL=$REACT_APP_BASE_URL
+ARG IS_PROD=true
+ENV IS_PROD=${IS_PROD}
+ENV REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
 
 RUN npm run build
 
