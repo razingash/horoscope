@@ -200,7 +200,7 @@ module.exports = {
                 );
 
                 webpackConfig.plugins.push(...htmlPlugins);
-            } else {
+            } else { // npm start
                 webpackConfig.plugins.push(
                     new HtmlWebpackPlugin({
                         filename: 'index.html',

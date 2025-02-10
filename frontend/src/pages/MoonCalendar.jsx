@@ -69,15 +69,15 @@ const MoonCalendar = () => {
         if (isMoonRising == null) { // проверить позже этот код, вроде правильно но в фазах может быть баг
             let previousTime = new Date(date.getTime() - 24 * 60 * 60 * 1000);
             const previousIllumination = calculateMoonIlluminationPercent(previousTime);
-            if (illumination > previousIllumination) { // "Убывающая Луна Waning"
-                setIsMoonRising(true);
+            if (illumination < previousIllumination) { // "Убывающая Луна Waning"
+                setIsMoonRising(false);
                 if (illumination < 50) { // Waning Crescent
                     setLunarPhase(8);
                 } else { // Waning Gibbous
                     setLunarPhase(6);
                 }
-            } else if (illumination <= previousIllumination) { //"Восходящая Луна Waxing"
-                setIsMoonRising(false);
+            } else if (illumination => previousIllumination) { //"Восходящая Луна Waxing"
+                setIsMoonRising(true);
                 if (lunarPhases.length === 0) {
                     if (illumination > 50) { // Waxing Gibbous
                         setLunarPhase(4);
@@ -157,13 +157,13 @@ const MoonCalendar = () => {
                     </table>
                 </div>
             </div>
-            <h1 className={"dfw_row_jcc"}>
+            <h2 className={"dfw_row_jcc"}>
                 <div>Moon Calendar for {year}</div>
                 <div className={"switching"}>
                     <div onClick={handlePreviousYear}>previous</div>
                     <div onClick={handleNextYear}>next</div>
                 </div>
-            </h1>
+            </h2>
             <div className={"area__calendar"}>
                 <div className={"field__moon_calendar"}>
                     <div className={"calendar__header"}>

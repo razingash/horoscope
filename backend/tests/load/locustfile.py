@@ -1,5 +1,3 @@
-import random
-
 from locust import HttpUser, task, between
 
 """ to load tests run 'locust -f locustfile.py' """
@@ -7,7 +5,7 @@ from locust import HttpUser, task, between
 
 class HoroscopeTasks(HttpUser):
     wait_time = between(1, 2)
-    host = "http://localhost:8000"
+    host = "http://localhost:8080/api"
 
     @task
     def horoscope_daily(self):
