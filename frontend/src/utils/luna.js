@@ -1,5 +1,3 @@
-/*добавить функцию для расчета времени в текущей временной зоны относительно UTC для MoonCalendar.jsx*/
-
 const PI = Math.PI;
 
 export const generateShadowPath = (phase, r=50) => {

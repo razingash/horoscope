@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {useStore} from "../../utils/store";
 
 const Header = () => {
-    const {language, setLanguage} = useStore();
+    const {language, setLanguage, isPwaMode} = useStore();
     const closeMenu = () => {
         const checkbox = document.getElementById("menu__toggle");
         document.body.style.overflow = '';
@@ -55,6 +55,7 @@ const Header = () => {
                                 <li><Link onClick={closeMenu} to={`/${language}/horoscope/annual/`} className="header__item">Annual</Link></li>
                             </ul>
                         </div>
+                        {!isPwaMode &&
                         <div className="header__dropdown__item">
                             <input id="arrow__dropdown_2" type="checkbox" className="arrow__dropdown_input"/>
                             <label htmlFor="arrow__dropdown_2" className="arrow__dropdown">
@@ -76,12 +77,18 @@ const Header = () => {
                                 </li>
                             </ul>
                         </div>
+                        }
                         <Link onClick={closeMenu} to={`/${language}/moon/calendar/`} className="header__dropdown__item">
                             Lunar Phases
                         </Link>
                         <Link onClick={closeMenu} to={`${language}/solar-system/`} className="header__dropdown__item">
                             Solar System
                         </Link>
+                        {isPwaMode &&
+                            <Link onClick={closeMenu} to={`${language}/pwa-settings/`} className="header__dropdown__item">
+                                settings
+                            </Link>
+                        }
                     </div>
                 </div>
             </div>

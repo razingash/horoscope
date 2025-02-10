@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 
 
 export const StoreContext = createContext(null);
@@ -11,7 +11,19 @@ const languages = ["en", "ru", "pl"];
 
 export const StoreProvider = ({children}) => {
     const [language, setLanguageState] = useState(localStorage.getItem("language"));
+    const [pushNotification, setPushNotification] = useState(localStorage.getItem("notifications") === "true");
+    const [choosedZodiac, setChoosedZodiac] = useState(localStorage.getItem("zodiac"));
     const [languageChangedByHeader, setLanguageChangedByHeader] = useState(false);
+
+    const [isPwaMode, setIsPwaMode] = useState(null);
+    useEffect(() => {
+        const isPwa =  window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+            window.matchMedia('(display-mode: standalone)').matches ||
+            window.matchMedia('(display-mode: minimal-ui)').matches ||
+            window.matchMedia('(display-mode: fullscreen)').matches;
+
+        setIsPwaMode(isPwa);
+    }, [])
 
     const setLanguage = (newLanguage="en") => {
         if (languages.includes(newLanguage)) {
@@ -25,11 +37,13 @@ export const StoreProvider = ({children}) => {
         }
         setLanguageChangedByHeader(true);
     }
-    const setPushNotifications = (notifications=false) => {
-        /*сделать доступным только в PWA*/
+    const setPushNotifications = (notifications) => {
+        localStorage.setItem("notifications", notifications)
+        setPushNotification(notifications)
     }
-    const setZodiac = (zodiac=null) => {
-        /*сделать доступным только в PWA*/
+    const setZodiac = (zodiac) => {
+        localStorage.setItem("zodiac", zodiac)
+        setChoosedZodiac(zodiac)
     }
 
     const resetLanguageChangeFlag = () => {
@@ -38,7 +52,8 @@ export const StoreProvider = ({children}) => {
 
     return (
         <StoreContext.Provider
-            value={{language, setLanguage, languageChangedByHeader, resetLanguageChangeFlag, setPushNotifications, setZodiac}}>
+            value={{language, setLanguage, languageChangedByHeader, resetLanguageChangeFlag, isPwaMode,
+                pushNotification, setPushNotifications, choosedZodiac, setZodiac}}>
             {children}
         </StoreContext.Provider>
     )

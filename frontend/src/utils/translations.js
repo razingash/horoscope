@@ -1,7 +1,26 @@
-/*use only for UI buttons, headers, etc*/
 
+/*use only for UI buttons, headers...
+decoders are also used to interpret static backend values to save traffic
+*/
 
-/* decoders are also used to interpret static backend values to save traffic */
+export const translateZodiacs = (language = "en") => {
+    const data = {
+        "en": [
+            "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
+        ],
+        "pl": [
+            "Baran", "Byk", "Bliźnięta", "Rak", "Lew", "Panna",
+            "Waga", "Skorpion", "Strzelec", "Koziorożec", "Wodnik", "Ryby"
+        ],
+        "ru": [
+            "Овен", "Телец", "Близнецы", "Рак", "Лев", "Дева",
+            "Весы", "Скорпион", "Стрелец", "Козерог", "Водолей", "Рыбы"
+        ]
+    };
+
+    return data[language];
+};
 
 export const decodeMoonPhase = (num, language="en") => {
     const data = {

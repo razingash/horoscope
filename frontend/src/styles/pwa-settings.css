@@ -1,0 +1,80 @@
+
+.field__settings {
+    display: flex;
+    justify-content: center;
+}
+
+.settings__list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    max-width: 420px;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid;
+    border-radius: 4px;
+}
+
+.settings__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 20px;
+}
+
+#languages {
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+
+.checkbox_zipline {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.zipline {
+    position: absolute;
+    width: 70%;
+    height: 10px;
+    background: #5e5e5e;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    opacity: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    transition: 0.4s;
+    border-radius: 12px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 6px;
+    bottom: 4px;
+    background-color: #000;
+    transition: 0.4s;
+    z-index: 1;
+}
+
+#push_notifications:checked + .slider:before {
+    transform: translateX(19px);
+}

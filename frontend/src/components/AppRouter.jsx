@@ -1,10 +1,10 @@
 import React, {useEffect, Suspense} from 'react';
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import {publicRotes} from "../rotes/urls";
+import {publicRotes, pwaRotes} from "../rotes/urls";
 import {useStore} from "../utils/store";
 
 const AppRouter = () => {
-    const {language, setLanguage, languageChangedByHeader} = useStore();
+    const {language, setLanguage, languageChangedByHeader, isPwaMode} = useStore();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -26,6 +26,9 @@ const AppRouter = () => {
         <Suspense fallback={<></>}>
             <Routes>
                 {publicRotes.map(route =>
+                    <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
+                )}
+                {isPwaMode && pwaRotes.map(route =>
                     <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
                 )}
                 {languageChangedByHeader ? (

@@ -5,6 +5,7 @@ const MoonCalendar = lazy(() => import("../pages/MoonCalendar"));
 const Horoscope = lazy(() => import("../pages/Horoscope"));
 const MoonEventsDescription = lazy(() => import("../pages/MoonEventsDescription"));
 const SolarSystem = lazy(() => import("../pages/SolarSystem"))
+const SettingsPWA = lazy(() => import("../pages/SettingsPWA"))
 
 export const publicRotes = [
     {path: "/", component: <Main/>, key: "main"},
@@ -17,4 +18,8 @@ export const publicRotes = [
     {path: "/moon/calendar/", component: <MoonCalendar/>, key: "moon-calendar"},
     {path: "/moon-events/", component: <MoonEventsDescription/>, key: "moon-events"},
     {path: "/solar-system/", component: <SolarSystem/>, key: "solar-system-bydate"}, /*main page*/
+]
+
+export const pwaRotes = [
+    {path: "/pwa-settings/", component: <SettingsPWA/>, key: "settings-pwa"}
 ]
