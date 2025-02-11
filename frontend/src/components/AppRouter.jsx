@@ -1,26 +1,31 @@
 import React, {useEffect, Suspense} from 'react';
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import {publicRotes, pwaRotes} from "../rotes/urls";
-import {useStore} from "../utils/store";
+import {languages, useStore} from "../utils/store";
 
 const AppRouter = () => {
     const {language, setLanguage, languageChangedByHeader, isPwaMode} = useStore();
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => {
+    useEffect(() => { // REDO
         const pathParts = location.pathname.split("/");
         const currentLang = pathParts[1];
-        
-        if (currentLang !== language ) {
-            if (languageChangedByHeader === true) {
-                 const newPath = `/${language}` + location.pathname.slice(3);
+        if (!languages.includes(currentLang)) { // Если в URL херня то редирект на дефолтный язык
+            navigate(`/${language}/`, { replace: true });
+            console.log("case 1")
+            return;
+        }
+
+        if (currentLang !== language) {
+            if (languageChangedByHeader) {
+                const newPath = `/${language}` + location.pathname.slice(currentLang.length + 1);
                 navigate(newPath, { replace: true });
             } else {
-                setLanguage(currentLang)
+                setLanguage(currentLang);
             }
         }
-    }, [language, navigate, location, languageChangedByHeader])
+    }, [language, navigate, location, languageChangedByHeader]);
 
     return (
         <Suspense fallback={<></>}>

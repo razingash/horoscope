@@ -1,8 +1,9 @@
 {
-    "name": "testname",
-    "shortame": "testname",
-    "id": "/pwa-horoscope",
-    "starturl": "/",
+    "name": "Heavenly Way",
+    "short_name": "Heavenly Way",
+    "description": "PWA for obtaining a horoscope, lunar phases and positions of the planets of the solar system",
+    "start_url": "/",
+    "id": "/",
     "lang":"und",
 	"scope":"/",
 	"display":"standalone",
@@ -85,5 +86,61 @@
 			"type":"image/png",
 			"purpose":"any"
 		}
-	]
+	],
+	"screenshots": [
+        {
+          "src": "/static/pwa-screenshots/640x320-top1.png",
+          "sizes": "640x320",
+          "type": "image/png",
+          "form_factor": "wide"
+        },
+        {
+          "src": "/static/pwa-screenshots/640x320-top2.png",
+          "sizes": "640x320",
+          "type": "image/png",
+          "form_factor": "wide"
+        },
+        {
+          "src": "/static/pwa-screenshots/640x320-top3.png",
+          "sizes": "640x320",
+          "type": "image/png",
+          "form_factor": "wide"
+        },
+        {
+          "src": "/static/pwa-screenshots/640x320-t2-1.png",
+          "sizes": "640x320",
+          "type": "image/png",
+          "form_factor": "wide"
+        },
+        {
+          "src": "/static/pwa-screenshots/320x640-1.png",
+          "sizes": "320x640",
+          "type": "image/png",
+          "form_factor": "narrow"
+        },
+        {
+          "src": "/static/pwa-screenshots/320x640-2.png",
+          "sizes": "320x640",
+          "type": "image/png",
+          "form_factor": "narrow"
+        },
+        {
+          "src": "/static/pwa-screenshots/320x640-3.png",
+          "sizes": "320x640",
+          "type": "image/png",
+          "form_factor": "narrow"
+        },
+        {
+          "src": "/static/pwa-screenshots/320x640-4.png",
+          "sizes": "320x640",
+          "type": "image/png",
+          "form_factor": "narrow"
+        },
+        {
+          "src": "/static/pwa-screenshots/320x640-5.png",
+          "sizes": "320x640",
+          "type": "image/png",
+          "form_factor": "narrow"
+        }
+    ]
 }

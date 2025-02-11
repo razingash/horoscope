@@ -7,7 +7,7 @@ export const useStore = () => {
     return useContext(StoreContext);
 }
 
-const languages = ["en", "ru", "pl"];
+export const languages = ["en", "ru", "pl"];
 
 export const StoreProvider = ({children}) => {
     const [language, setLanguageState] = useState(localStorage.getItem("language"));
