@@ -8,24 +8,31 @@ const AppRouter = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => { // REDO
-        const pathParts = location.pathname.split("/");
-        const currentLang = pathParts[1];
-        if (!languages.includes(currentLang)) { // Если в URL херня то редирект на дефолтный язык
-            navigate(`/${language}/`, { replace: true });
-            console.log("case 1")
-            return;
-        }
+    useEffect(() => {
+        console.log(location.pathname)
+    }, [navigate, location])
 
-        if (currentLang !== language) {
-            if (languageChangedByHeader) {
-                const newPath = `/${language}` + location.pathname.slice(currentLang.length + 1);
-                navigate(newPath, { replace: true });
-            } else {
-                setLanguage(currentLang);
+    useEffect(() => { // редиректы делать тут
+        const pathParts = location.pathname.split("/");
+        const currentLang = pathParts[1] || language;
+        console.log("croos0: ", currentLang, language, pathParts[1])
+        if (currentLang !== null && language !== null) {
+            console.log("croos1: ", currentLang, language, pathParts[1])
+            if (currentLang !== language) {
+                if (languageChangedByHeader) {
+                    const newPath = `/${language}` + location.pathname.slice(currentLang.length + 1);
+                    navigate(newPath, {replace: true});
+                    console.log("case 1", language)
+                } else {
+                    setLanguage(currentLang);
+                    console.log("case 2", currentLang, language)
+                }
+            } else if (!languages.includes(currentLang)) { // Если в URL херня то редирект на дефолтный язык
+                navigate(`/${language}/`, {replace: true});
+                console.log("case 3", language)
             }
         }
-    }, [language, navigate, location, languageChangedByHeader]);
+    }, [language, location, languageChangedByHeader, navigate])
 
     return (
         <Suspense fallback={<></>}>
@@ -36,11 +43,12 @@ const AppRouter = () => {
                 {isPwaMode && pwaRotes.map(route =>
                     <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
                 )}
-                {languageChangedByHeader ? (
+                {language && (languageChangedByHeader ? (
                     <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
                 ) : (
                     <Route path="*" element={<Navigate to={`/${language}/`} replace />} key={"redirect-to-home"} />
-                )}
+                ))}
+                <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
             </Routes>
         </Suspense>
     );

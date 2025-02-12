@@ -92,7 +92,6 @@ const MoonCalendar = () => {
             lunarPhases.forEach((phase) => {
                 const phaseDate = new Date(phase.datetime);
                 if (currentDate.toDateString() === phaseDate.toDateString()) {
-                    console.log(phase.phase)
                     setLunarPhase(phase.phase);
                 }
             });
