@@ -1,6 +1,5 @@
 import {createContext, useContext, useEffect, useState} from "react";
 
-
 export const StoreContext = createContext(null);
 
 export const useStore = () => {

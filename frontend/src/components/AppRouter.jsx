@@ -1,10 +1,11 @@
-import React, {useEffect, Suspense} from 'react';
+import React, {useEffect, Suspense, useState} from 'react';
 import {Navigate, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import {publicRotes, pwaRotes} from "../rotes/urls";
 import {languages, useStore} from "../utils/store";
 
 const AppRouter = () => {
     const {language, setLanguage, languageChangedByHeader, isPwaMode} = useStore();
+    const [redirectToDefault, setRedirectToDefault] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -31,23 +32,19 @@ const AppRouter = () => {
     useEffect(() => { // редиректы делать тут
         const pathParts = location.pathname.split("/");
         const currentLang = pathParts[1] || language;
-        console.log("croos0: ", currentLang, language, pathParts[1])
+        setRedirectToDefault(true)
         if (currentLang !== null && language !== null) {
-            console.log("croos1: ", currentLang, language, pathParts[1])
             if (currentLang !== language) {
-                console.log("languag3es", currentLang, language)
+                setRedirectToDefault(false)
                 if (languages.includes(currentLang)) {
                     if (languageChangedByHeader) {
                         const newPath = `/${language}` + location.pathname.slice(currentLang.length + 1);
                         navigate(newPath, {replace: true});
-                        console.log("case 1_0", languageChangedByHeader)
                     } else {
-                        console.log("case 1_1", languageChangedByHeader)
                         setLanguage(currentLang)
                     }
-                } else { // Если в URL херня то редирект на дефолтный язык
+                } else {
                     navigate(`/${language}/`, {replace: true});
-                    console.log("case 2")
                 }
             }
         }
@@ -62,9 +59,12 @@ const AppRouter = () => {
                 {isPwaMode && pwaRotes.map(route =>
                     <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
                 )}
-                {language ? (
-                    <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
-                ) : ( // редирект на начальную страницу если нет языка| сработает только если быть уже на сайте, очистить кэщ и перейти на другой язык
+                {language ? ( redirectToDefault ? (
+                        <Route path="*" element={<Navigate to={`/${language}/`} replace />} key={"redirect-to-user-language"}/>
+                    ) : (
+                        <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
+                    )
+                ) : (
                     <Route path="*" element={<Navigate to="/en/" replace />} key={"redirect-to-default"}/>
                 )}
             </Routes>
