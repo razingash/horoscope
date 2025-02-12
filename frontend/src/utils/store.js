@@ -46,13 +46,9 @@ export const StoreProvider = ({children}) => {
         setChoosedZodiac(zodiac)
     }
 
-    const resetLanguageChangeFlag = () => {
-        setLanguageChangedByHeader(false);
-    }
-
     return (
         <StoreContext.Provider
-            value={{language, setLanguage, languageChangedByHeader, resetLanguageChangeFlag, isPwaMode,
+            value={{language, setLanguage, languageChangedByHeader, isPwaMode,
                 pushNotification, setPushNotifications, choosedZodiac, setZodiac}}>
             {children}
         </StoreContext.Provider>

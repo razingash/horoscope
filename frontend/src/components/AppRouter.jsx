@@ -12,6 +12,22 @@ const AppRouter = () => {
         console.log(location.pathname)
     }, [navigate, location])
 
+    useEffect(() => {
+        if (!language) {
+            const currentLang = location.pathname.split("/")[1];
+            if (languages.includes(currentLang)) {
+                setLanguage(currentLang)
+            } else {
+                const userLanguage = navigator.language.slice(0, 2);
+                if (languages.includes(userLanguage)) {
+                    setLanguage(userLanguage)
+                } else {
+                    setLanguage("en")
+                }
+            }
+        }
+    }, [])
+
     useEffect(() => { // редиректы делать тут
         const pathParts = location.pathname.split("/");
         const currentLang = pathParts[1] || language;
@@ -19,20 +35,23 @@ const AppRouter = () => {
         if (currentLang !== null && language !== null) {
             console.log("croos1: ", currentLang, language, pathParts[1])
             if (currentLang !== language) {
-                if (languageChangedByHeader) {
-                    const newPath = `/${language}` + location.pathname.slice(currentLang.length + 1);
-                    navigate(newPath, {replace: true});
-                    console.log("case 1", language)
-                } else {
-                    setLanguage(currentLang);
-                    console.log("case 2", currentLang, language)
+                console.log("languag3es", currentLang, language)
+                if (languages.includes(currentLang)) {
+                    if (languageChangedByHeader) {
+                        const newPath = `/${language}` + location.pathname.slice(currentLang.length + 1);
+                        navigate(newPath, {replace: true});
+                        console.log("case 1_0", languageChangedByHeader)
+                    } else {
+                        console.log("case 1_1", languageChangedByHeader)
+                        setLanguage(currentLang)
+                    }
+                } else { // Если в URL херня то редирект на дефолтный язык
+                    navigate(`/${language}/`, {replace: true});
+                    console.log("case 2")
                 }
-            } else if (!languages.includes(currentLang)) { // Если в URL херня то редирект на дефолтный язык
-                navigate(`/${language}/`, {replace: true});
-                console.log("case 3", language)
             }
         }
-    }, [language, location, languageChangedByHeader, navigate])
+    }, [language, location, navigate])
 
     return (
         <Suspense fallback={<></>}>
@@ -43,12 +62,11 @@ const AppRouter = () => {
                 {isPwaMode && pwaRotes.map(route =>
                     <Route path={`/${language}${route.path}`} element={route.component} key={route.key}></Route>
                 )}
-                {language && (languageChangedByHeader ? (
+                {language ? (
                     <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
-                ) : (
-                    <Route path="*" element={<Navigate to={`/${language}/`} replace />} key={"redirect-to-home"} />
-                ))}
-                <Route path="*" element={<Navigate to="" replace />} key={"redirect"}/>
+                ) : ( // редирект на начальную страницу если нет языка| сработает только если быть уже на сайте, очистить кэщ и перейти на другой язык
+                    <Route path="*" element={<Navigate to="/en/" replace />} key={"redirect-to-default"}/>
+                )}
             </Routes>
         </Suspense>
     );

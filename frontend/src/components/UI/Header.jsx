@@ -1,35 +1,15 @@
-import React, {useEffect} from 'react';
-import {Link, useLocation} from "react-router-dom";
-import {languages, useStore} from "../../utils/store";
+import React from 'react';
+import {Link} from "react-router-dom";
+import {useStore} from "../../utils/store";
 
 const Header = () => {
     const {language, setLanguage, isPwaMode} = useStore();
-    const location = useLocation();
 
     const closeMenu = () => {
         const checkbox = document.getElementById("menu__toggle");
         document.body.style.overflow = '';
         checkbox.checked = false;
     };
-
-    useEffect(() => {
-        if (!language) {
-            const currentLang = location.pathname.split("/")[1];
-            if (languages.includes(currentLang)) {
-                setLanguage(currentLang)
-                console.log("language1: ", currentLang)
-            } else {
-                const userLanguage = navigator.language.slice(0, 2);
-                if (languages.includes(userLanguage)) {
-                    setLanguage(userLanguage)
-                    console.log("language2: ", userLanguage)
-                } else {
-                    setLanguage("en")
-                    console.log("language3: en")
-                }
-            }
-        }
-    }, [])
 
     const setHiddenLanguage = (language) => {
         setLanguage(language)
