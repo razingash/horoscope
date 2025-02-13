@@ -10,10 +10,6 @@ const AppRouter = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(location.pathname)
-    }, [navigate, location])
-
-    useEffect(() => {
         if (!language) {
             const currentLang = location.pathname.split("/")[1];
             if (languages.includes(currentLang)) {
