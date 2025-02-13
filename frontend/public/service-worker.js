@@ -61,7 +61,7 @@ self.addEventListener('install', (event) => {
             console.log('Service Worker: Caching Files');
             return fetch('asset-manifest.json').then((response) => {
                 return response.json();
-            }).then((manifest) => { // улучшить
+            }).then((manifest) => {
                 const filesToCache = [...FILES_TO_CACHE];
 
                 Object.keys(manifest.files).forEach((filePath) => {
@@ -69,8 +69,38 @@ self.addEventListener('install', (event) => {
                         filesToCache.push(manifest.files[filePath]);
                     }
                 });
+                const rawDate = new Date();
+                const date = rawDate.toISOString().split('T')[0] + "T00:00:00Z";
+                const year = rawDate.getFullYear()
 
-                return cache.addAll(filesToCache);
+                let userLang = (navigator.language || 'en').split('-')[0];
+                const supportedLanguages = ['en', 'pl', 'ru'];
+
+                if (!supportedLanguages.includes(userLang)) {
+                    userLang = 'en';
+                }
+
+                const apiUrls = [
+                    `api/horoscope/daily/?language=${userLang}&date=${date}`,
+                    `api/horoscope/weekly/?language=${userLang}&date=${date}`,
+                    `api/horoscope/monthly/?language=${userLang}&date=${date}`,
+                    `api/horoscope/annual/?language=${userLang}&date=${date}`,
+                    `api/moon/lunar-forecast/${year}/`,
+                    'api/solar-system/map/'
+                ];
+
+                const fetchPromises = apiUrls.map((url) => {
+                    return fetch(url).then((response) => {
+                        if (response.ok) {
+                            return cache.put(url, response.clone());
+                        }
+                    });
+                });
+
+                return Promise.all([
+                    ...fetchPromises,
+                    cache.addAll(filesToCache)
+                ]);
             });
         })
     );
@@ -113,5 +143,7 @@ self.addEventListener('fetch', (event) => { // перехватчик
         cacheFirst(event);
     } else if (url.pathname === '/index.html' || url.pathname.match(/\.(css|js|ico)$/)) { // Network First
         cacheFirst(event);
+    } else if (url.pathname.startsWith('/api/')) {
+        cacheFirst(event); // Network first later
     }
 });

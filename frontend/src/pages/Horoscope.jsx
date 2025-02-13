@@ -12,7 +12,8 @@ const Horoscope = ({type}) => {
     }, 0, 1000)
 
     const fetchHoroscopeByType = async () => {
-        const date = new Date();
+        const rawDate = new Date()
+        const date = rawDate.toISOString().split('T')[0] + "T00:00:00Z";
         // eslint-disable-next-line default-case
         switch (type) {
             case 1: //daily
