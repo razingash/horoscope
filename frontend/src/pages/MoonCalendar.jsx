@@ -76,7 +76,7 @@ const MoonCalendar = () => {
                 } else { // Waning Gibbous
                     setLunarPhase(6);
                 }
-            } else if (illumination => previousIllumination) { //"Восходящая Луна Waxing"
+            } else { //"Восходящая Луна Waxing"
                 setIsMoonRising(true);
                 if (lunarPhases.length === 0) {
                     if (illumination > 50) { // Waxing Gibbous
@@ -97,11 +97,11 @@ const MoonCalendar = () => {
             });
         }
 
-        if (isMoonRising === true) {
+        if (isMoonRising === true) { // ! скорее всего так все будет правильно(понаблюдать)
             let moonCovering = illumination * 1.8
             setMoonCovering(moonCovering);
         } else if (isMoonRising === false) {
-            let moonCovering = illumination * 1.8 * 2
+            let moonCovering = illumination * 1.8
             setMoonCovering(moonCovering);
         }
     }, [isMoonRising, lunarPhases])

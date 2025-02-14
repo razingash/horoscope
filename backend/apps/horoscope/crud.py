@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import HoroscopeDaily, LanguagesChoices, HoroscopeWeekly, HoroscopeMonthly, ZodiacsChoices, \
@@ -117,4 +118,8 @@ async def save_horoscope_data(session, model_class, data, **kwargs):
             filters = dict(language=language, zodiac=zodiac, **kwargs)
             horoscope = model_class(description=description, **filters)
             session.add(horoscope)
-    await session.commit()
+
+    try:
+        await session.commit()
+    except IntegrityError:
+        await session.rollback()
