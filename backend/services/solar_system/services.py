@@ -4,7 +4,7 @@ from skyfield.api import load
 from datetime import datetime, timedelta, timezone
 from json import dumps as json_dumps
 
-from core.config import eph
+from core.ephemeris import eph
 from core.database import db_session
 from core.models.solar_system import SolarSystemMap
 

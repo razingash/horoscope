@@ -8,18 +8,16 @@ from alembic.script import ScriptDirectory
 from sqlalchemy import text
 from .makemigrations import command_makemigrations
 from .migrate import command_migrate
-from core.database import db_session
-from core.config import BASE_DIR, DATABASE, ALEMBIC_INI_PATH
 from core.models import HoroscopeFitDaily, HoroscopeVoidDaily, HoroscopeFitWeekly, HoroscopeVoidWeekly, \
     HoroscopeFitMonthly, HoroscopeVoidMonthly, HoroscopeFitAnnual, HoroscopeVoidAnnual,  HousesChoices, PlanetsChoices,\
     AspectsChoices, ZodiacsChoices, LanguagesChoices, MoonPhasesChoices, EarthSeasons
+from core.database import db_session
+from core.config import BASE_DIR, ALEMBIC_INI_PATH
 
 
 def command_initialization():
-    database_url = DATABASE
-
     try:
-        is_migrations_applied = asyncio_run(are_migrations_applied(database_url))
+        is_migrations_applied = asyncio_run(are_migrations_applied())
     except sqlalchemy.exc.OperationalError: # database doesn't exist
         initialize()
     else:
@@ -34,7 +32,7 @@ def initialize():
     asyncio_run(generate_static_data())
 
 
-async def are_migrations_applied(database_url: str) -> bool:
+async def are_migrations_applied() -> bool:
     """checks the relevance of migrations"""
 
     async with db_session.session_factory() as session:
@@ -61,10 +59,10 @@ async def fill_static_data_without_fixtures() -> None:
                 await session.commit()
                 batch_counter = 0
 
-        def create_horoscope_entry(language, description, zodiac, model_class, **kwargs):
+        def create_horoscope_entry(lang, desc, zod, model_class, **kwargs):
             nonlocal batch_counter
             horoscope = model_class(
-                language=language, zodiac=zodiac, description=description, **kwargs
+                language=lang, zodiac=zod, description=desc, **kwargs
             )
             session.add(horoscope)
             batch_counter += 1

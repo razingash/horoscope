@@ -32,9 +32,13 @@ def main():
     elif args.command == 'postinitialization':
         try:
             end_date = datetime.strptime(args.end_date, '%Y-%m-%d')
+            if datetime(2650, 1, 25) < end_date < datetime(1549, 12, 31):
+                raise PermissionError
             command_postinitialization(end_date)
         except ValueError:
             print(Fore.LIGHTRED_EX + "Invalid date format. You need to use YYYY-MM-DD.")
+        except PermissionError:
+            print(Fore.LIGHTRED_EX + "The date should be between 1549-12-31 and 2650-1-25")
 
 
 if __name__ == "__main__":

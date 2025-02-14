@@ -1,6 +1,6 @@
 import pytz
 
-from core.config import eph
+from core.ephemeris import eph
 
 
 def calculate_transits_for_natal_chart(start_date, end_date):

@@ -6,7 +6,7 @@ from datetime import datetime
 from skyfield.api import load
 from skyfield.almanac import find_discrete, moon_phases
 
-from core.config import eph
+from core.ephemeris import eph
 from core.models import MoonPhasesChoices, MoonEventsChoices
 
 
