@@ -9,12 +9,14 @@ export const useStore = () => {
 export const languages = ["en", "ru", "pl"];
 
 export const StoreProvider = ({children}) => {
-    const [language, setLanguageState] = useState(localStorage.getItem("language"));
-    const [pushNotification, setPushNotification] = useState(localStorage.getItem("notifications") === "true");
-    const [choosedZodiac, setChoosedZodiac] = useState(localStorage.getItem("zodiac"));
     const [languageChangedByHeader, setLanguageChangedByHeader] = useState(false);
+    const [language, setLanguageState] = useState(localStorage.getItem("language"));
+    const [choosedZodiac, setChoosedZodiac] = useState(localStorage.getItem("zodiac"));
+    const [pushNotification, setPushNotification] = useState(Notification.permission === "granted");
 
+    const [pushTime, setPushTime] = useState(localStorage.getItem("pushTime") || "10:00");
     const [isPwaMode, setIsPwaMode] = useState(null);
+
     useEffect(() => {
         const isPwa =  window.matchMedia('(display-mode: window-controls-overlay)').matches ||
             window.matchMedia('(display-mode: standalone)').matches ||
@@ -23,6 +25,44 @@ export const StoreProvider = ({children}) => {
 
         setIsPwaMode(isPwa);
     }, [])
+
+    useEffect(() => {
+        if (pushNotification && pushTime) {
+            const delay = calculateDelay(pushTime);
+            console.log(`Push notification scheduled in ${delay / 1000} seconds`);
+
+            const timer = setTimeout(() => {
+                triggerPushNotification("Your notification");
+            }, delay);
+
+            return () => clearTimeout(timer);
+        }
+    }, [pushNotification, pushTime]);
+
+    const calculateDelay = (time) => {
+        const now = new Date();
+        const [hours, minutes] = time.split(":").map(Number);
+        const targetTime = new Date();
+
+        targetTime.setHours(hours, minutes, 0, 0);
+
+        if (targetTime <= now) {
+            targetTime.setDate(targetTime.getDate() + 1);
+        }
+
+        return targetTime - now;
+    };
+
+    const triggerPushNotification = (message) => {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.active.postMessage({
+                    action: 'triggerPush',
+                    body: message
+                });
+            });
+        }
+    };
 
     const setLanguage = (newLanguage="en") => {
         if (languages.includes(newLanguage)) {
@@ -36,19 +76,21 @@ export const StoreProvider = ({children}) => {
         }
         setLanguageChangedByHeader(true);
     }
-    const setPushNotifications = (notifications) => {
-        localStorage.setItem("notifications", notifications)
-        setPushNotification(notifications)
-    }
+
     const setZodiac = (zodiac) => {
         localStorage.setItem("zodiac", zodiac)
         setChoosedZodiac(zodiac)
     }
 
+    const setPushNotificationTime = (time) => {
+        localStorage.setItem("pushTime", time)
+        setPushTime(time);
+    }
+
     return (
         <StoreContext.Provider
-            value={{language, setLanguage, languageChangedByHeader, isPwaMode,
-                pushNotification, setPushNotifications, choosedZodiac, setZodiac}}>
+            value={{language, setLanguage, languageChangedByHeader, isPwaMode, triggerPushNotification,
+                pushNotification, setPushNotification, choosedZodiac, setZodiac, pushTime, setPushNotificationTime}}>
             {children}
         </StoreContext.Provider>
     )

@@ -101,7 +101,7 @@ const MoonCalendar = () => {
             let moonCovering = illumination * 1.8
             setMoonCovering(moonCovering);
         } else if (isMoonRising === false) {
-            let moonCovering = illumination * 1.8
+            let moonCovering = illumination * 1.8 + 90
             setMoonCovering(moonCovering);
         }
     }, [isMoonRising, lunarPhases])

@@ -77,7 +77,7 @@ body {
     background: var(--background);
 }
 
-.header__button__language {
+.header__button__translate, .header__button__app {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -335,7 +335,7 @@ body {
         align-items: center;
         flex-grow: 1;
     }
-    .header__big, .header__button__language {
+    .header__big, .header__button__translate {
         display: none;
     }
 }

@@ -121,6 +121,18 @@ self.addEventListener('activate', (event) => {
     );
 });
 
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener('message', (event) => {
+    if (event.data.action === 'triggerPush') {
+        const messageBody = event.data.body || 'Default notification body';
+
+        // eslint-disable-next-line no-restricted-globals
+        self.registration.showNotification('Triggered Push Notification', {
+            body: messageBody,
+            icon: '/favicon.ico',
+        });
+    }
+});
 
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener('fetch', (event) => {

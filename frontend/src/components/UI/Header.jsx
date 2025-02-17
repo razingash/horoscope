@@ -1,9 +1,30 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {useStore} from "../../utils/store";
 
 const Header = () => {
     const {language, setLanguage, isPwaMode} = useStore();
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+
+        window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+        return () => {
+            window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+        };
+    }, []);
+
+    const handleInstall = () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            setDeferredPrompt(null);
+        }
+    };
 
     const closeMenu = () => {
         const checkbox = document.getElementById("menu__toggle");
@@ -100,7 +121,14 @@ const Header = () => {
                 <Link to={`/${language}/moon/calendar/`} className="header__item">lunar calendar</Link>
                 <Link to={`${language}/solar-system/`} className="header__item">solar system</Link>
             </div>
-            <div className="header__button__language">
+            {!isPwaMode &&
+                <div className={"header__button__app"} onClick={handleInstall}>
+                    <svg className={"svg__translator"}>
+                        <use xlinkHref={"#download_app"}></use>
+                    </svg>
+                </div>
+            }
+            <div className="header__button__translate">
                 <input id="checkbox_translate" type="checkbox"/>
                 <label htmlFor="checkbox_translate" className={"default__label"}>
                    <svg className="svg__translator">

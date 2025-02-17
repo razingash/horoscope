@@ -4,7 +4,33 @@ import {translateZodiacs} from "../utils/translations";
 import {useStore} from "../utils/store";
 
 const SettingsPwa = () => {
-    const {pushNotification, setPushNotifications, choosedZodiac, setZodiac, setLanguage, language} = useStore();
+    const {
+        pushNotification, setPushNotification, choosedZodiac, setZodiac,
+        setLanguage, language, pushTime, setPushNotificationTime
+    } = useStore();
+
+    const handleTimeChange = (e) => {
+        setPushNotificationTime(e.target.value);
+    };
+
+    const handlePushNotificationToggle = async (e) => {
+        const isEnabled = e.target.checked;
+
+        if (isEnabled) {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                setPushNotification(true);
+            } else {
+                alert("You have banned notifications. Allow them in the browser settings.");
+                e.target.checked = false;
+            }
+        } else {
+            alert(
+                "The browser doesn't allow resetting permission to automatically. " +
+                "To turn off the notifications, go to the site settings in the browser and change the permits manually."
+            )
+        }
+    }
 
     return (
         <div className={"section__main"}>
@@ -22,8 +48,9 @@ const SettingsPwa = () => {
                         <div>Nofitications</div>
                         <label htmlFor="push_notifications" className={"checkbox_zipline"}>
                             <span className={"zipline"}></span>
-                            <input id="push_notifications" onChange={(e) => setPushNotifications(e.target.checked)}
-                                   type="checkbox" className={"switch"} checked={pushNotification}></input>
+                            <input id="push_notifications" type="checkbox" className={"switch"} checked={pushNotification}
+                                   onChange={handlePushNotificationToggle}
+                            />
                             <span className="slider"></span>
                         </label>
                     </div>
@@ -35,6 +62,12 @@ const SettingsPwa = () => {
                                 <option key={index} value={index + 1}>{zodiac}</option>
                             ))}
                         </select>
+                    </div>
+                    <div className={"settings__item"} style={{ display: pushNotification ? "flex" : "none" }}>
+                        <label htmlFor="push_time">Notification Time</label>
+                        <input id="push_time" type="time" value={pushTime || ''} onChange={handleTimeChange}
+                               disabled={!pushNotification}
+                        />
                     </div>
                 </div>
             </div>
