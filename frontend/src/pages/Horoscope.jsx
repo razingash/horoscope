@@ -16,7 +16,7 @@ const Horoscope = ({type}) => {
         const date = rawDate.toISOString().split('T')[0] + "T00:00:00Z";
         // eslint-disable-next-line default-case
         switch (type) {
-            case 1: //daily
+            case 1:
                 return await HoroscopeService.getDailyHoroscope(date, language);
             case 2:
                 return await HoroscopeService.getWeeklyHoroscope(date, language);

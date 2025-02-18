@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select, func
 
-from core.models.solar_system import SolarSystemMap
+from core.models import SolarSystemMap
 from services.solar_system.services import generate_solar_system_data
 
 async def get_actual_ss_map(session, nearest_date):

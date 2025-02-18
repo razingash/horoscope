@@ -1,9 +1,7 @@
 import argparse
+import importlib
 
-from colorama import init, Fore
-from datetime import datetime
-from commands import command_makemigrations, command_initialization, command_deinitialization, command_migrate, \
-    command_postinitialization
+from colorama import init
 
 """Commands for easy interaction with the AioSqlite3 database and initial data"""
 
@@ -22,19 +20,27 @@ def main():
 
     args = parser.parse_args()
     if args.command == 'initialization':
-        command_initialization()
+        command = importlib.import_module('commands.initialization')
+        command.command_initialization()
     elif args.command == 'deinitialization':
-        command_deinitialization()
+        command = importlib.import_module('commands.deinitialization')
+        command.command_deinitialization()
     elif args.command == 'makemigrations':
-        command_makemigrations()
+        command = importlib.import_module('commands.makemigrations')
+        command.command_makemigrations()
     elif args.command == 'migrate':
-        command_migrate()
+        command = importlib.import_module('commands.migrate')
+        command.command_migrate()
     elif args.command == 'postinitialization':
+        from colorama import Fore
+        from datetime import datetime
+
         try:
             end_date = datetime.strptime(args.end_date, '%Y-%m-%d')
             if datetime(2650, 1, 25) < end_date < datetime(1549, 12, 31):
                 raise PermissionError
-            command_postinitialization(end_date)
+            command = importlib.import_module('commands.postinitialization')
+            command.command_postinitialization(end_date)
         except ValueError:
             print(Fore.LIGHTRED_EX + "Invalid date format. You need to use YYYY-MM-DD.")
         except PermissionError:

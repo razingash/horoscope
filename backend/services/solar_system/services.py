@@ -6,7 +6,7 @@ from json import dumps as json_dumps
 
 from core.ephemeris import eph
 from core.database import db_session
-from core.models.solar_system import SolarSystemMap
+from core.models import SolarSystemMap
 
 
 def calculate_helio_angles(date: datetime = datetime.today()) -> dict:

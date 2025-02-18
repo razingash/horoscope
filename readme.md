@@ -11,9 +11,6 @@
     python main.py
    ```
 
-## Description
-Ordinary horoscope, with natal chart and lunar events
-
 ### Tech stack
 - The goal of the project is to create a proper PWA application and publish it on the playmarket. ReactJS will be used for this purpose
 
@@ -52,6 +49,3 @@ this forecast is based on the position of the planets at the beginning of the ye
 - - zodiacs(12) * planets(10) * houses(12) = 1440 * 3 = 4320
 - for dead zodiacs
 - - zodiacs(12) * where is the ruling planet(12) * houses(12) = 1728 * 3 = 5184
-
-### Natal chart
-will be implemented before the patterns are uploaded to GitHub

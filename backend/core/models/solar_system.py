@@ -3,8 +3,11 @@ from datetime import date
 from sqlalchemy import Text, Date
 from sqlalchemy.orm import Mapped, mapped_column
 
-from core.models import Base
+from core.models.base import Base
 
+__all__ = [
+    'SolarSystemMap',
+]
 
 class SolarSystemMap(Base):
     text_data: Mapped[str] = mapped_column(Text, nullable=False)

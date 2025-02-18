@@ -2,41 +2,13 @@ from sqlalchemy import Enum, String, SmallInteger, UniqueConstraint, Date
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from core.models.base import Base, HoroscopePreciseBase, HoroscopeVoidBase, HoroscopeBase, HoroscopeCompleteBase
-from core.models.utils import PlanetsChoices, ZodiacsChoices, LanguagesChoices, HousesChoices, AspectsChoices, \
-    HoroscopeTypes, MoonPhasesChoices, EarthSeasons
+from core.models.utils import ZodiacsChoices, AspectsChoices, HoroscopeTypes, MoonPhasesChoices, EarthSeasons
 
 __all__ = [
-    'PatternsPlanet', 'PatternsAspect', 'PatternsHouse', 'HoroscopeFitDaily', 'HoroscopeVoidDaily',
-    'HoroscopeFitWeekly', 'HoroscopeVoidWeekly', 'HoroscopeFitMonthly', 'HoroscopeVoidMonthly', 'HoroscopeFitAnnual',
-    'HoroscopeVoidAnnual', 'Horoscope', 'HoroscopeDaily', 'HoroscopeWeekly', 'HoroscopeMonthly', 'HoroscopeAnnual'
+    'HoroscopeFitDaily', 'HoroscopeVoidDaily', 'HoroscopeFitWeekly', 'HoroscopeVoidWeekly', 'HoroscopeFitMonthly',
+    'HoroscopeVoidMonthly', 'HoroscopeFitAnnual', 'HoroscopeVoidAnnual', 'Horoscope', 'HoroscopeDaily',
+    'HoroscopeWeekly', 'HoroscopeMonthly', 'HoroscopeAnnual'
 ]
-
-"""
-возможно удалить инфу для натальных графиков
-"""
-
-class PatternsPlanet(Base): # used for natal chart description
-    __tablename__ = "patterns_planet"
-    planet: Mapped[PlanetsChoices] = mapped_column(Enum(PlanetsChoices), nullable=False, index=True)
-    language: Mapped[LanguagesChoices] = mapped_column(Enum(LanguagesChoices), nullable=False, index=True)
-    zodiac: Mapped[ZodiacsChoices] = mapped_column(Enum(ZodiacsChoices), nullable=False, index=True)
-    description: Mapped[str] = mapped_column(String(1000), nullable=False)
-
-
-class PatternsAspect(Base): # used for natal chart description
-    __tablename__ = "patterns_aspect"
-    planet: Mapped[PlanetsChoices] = mapped_column(Enum(PlanetsChoices), nullable=False, index=True)
-    language: Mapped[LanguagesChoices] = mapped_column(Enum(LanguagesChoices), nullable=False, index=True)
-    aspect: Mapped[AspectsChoices] = mapped_column(Enum(AspectsChoices), nullable=False, index=True)
-    description: Mapped[str] = mapped_column(String(1000), nullable=False)
-
-
-class PatternsHouse(Base): # used for natal chart description
-    __tablename__ = "patterns_house"
-    planet: Mapped[PlanetsChoices] = mapped_column(Enum(PlanetsChoices), nullable=False, index=True)
-    language: Mapped[LanguagesChoices] = mapped_column(Enum(LanguagesChoices), nullable=False, index=True)
-    house: Mapped[HousesChoices] = mapped_column(Enum(HousesChoices), nullable=False, index=True)
-    description: Mapped[str] = mapped_column(String(1000), nullable=False)
 
 
 class HoroscopeFitDaily(HoroscopePreciseBase):
