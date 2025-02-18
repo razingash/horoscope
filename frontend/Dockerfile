@@ -8,8 +8,8 @@ COPY package-lock.json /app/
 RUN npm install
 
 COPY . /app/
-ARG REACT_APP_BASE_URL="http://192.168.1.25:80/api/"
-#ARG REACT_APP_BASE_URL="http://localhost:8080/api/"
+ARG REACT_APP_BASE_URL="http://192.168.1.25:80"
+#ARG REACT_APP_BASE_URL="http://localhost:8080"
 ARG IS_PROD=true
 ENV IS_PROD=${IS_PROD}
 ENV REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
